@@ -5,6 +5,7 @@ import com.grsu.teacherassistant.beans.NotificationSettingsBean;
 import com.grsu.teacherassistant.beans.utility.*;
 import com.grsu.teacherassistant.constants.Constants;
 import com.grsu.teacherassistant.dao.EntityDAO;
+import com.grsu.teacherassistant.dao.GroupDAO;
 import com.grsu.teacherassistant.dao.LessonDAO;
 import com.grsu.teacherassistant.dao.StudentDAO;
 import com.grsu.teacherassistant.entities.*;
@@ -19,6 +20,7 @@ import org.primefaces.component.api.DynamicColumn;
 import org.primefaces.event.CellEditEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.ToggleSelectEvent;
+import org.primefaces.model.DualListModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -289,6 +291,14 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
             additionalStudents = new ArrayList<>(this.presentStudents);
             additionalStudents.removeAll(this.lessonStudents);
         }
+    }
+
+    public void showAdditionalStudents() {
+        FacesUtils.showDialog("amountOfAdditionalStudents");
+    }
+
+    public void exitAdditionalStudentsDialog() {
+        FacesUtils.closeDialog("amountOfAdditionalStudents");
     }
 
     public void runBackup(String reason) {
@@ -706,7 +716,11 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
         lessonModeBean.setLesson(selectedLesson);
         lessonModeBean.setStream(selectedLesson.getStream());
         sessionBean.setActiveView("studentMode");
-        studentModeBean.initStudentMode(((LessonStudentModel) event.getObject()).getStudent(), selectedLesson.getStream());
+        if (event.getObject() instanceof Student) {
+            studentModeBean.initStudentMode((Student) event.getObject(), selectedLesson.getStream());
+        } else {
+            studentModeBean.initStudentMode(((LessonStudentModel) event.getObject()).getStudent(), selectedLesson.getStream());
+        }
     }
 
     public void onPresentStudentsSelect(ToggleSelectEvent event) {

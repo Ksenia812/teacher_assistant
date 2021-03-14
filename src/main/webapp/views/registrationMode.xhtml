@@ -166,7 +166,8 @@
                             <h:outputText value="#{msg['lesson.students.absent']}"/>
                             <h:outputText value="#{registrationModeBean.absentStudents.size()}"/>
 
-                            <h:outputText rendered="#{registrationModeBean.additionalStudents.size() gt 0}"
+                            <h:commandButton rendered="#{registrationModeBean.additionalStudents.size() gt 0}"
+                                      actionListener="#{registrationModeBean.showAdditionalStudents()}"
                                           value="#{msg['lesson.students.additional']}"/>
                             <h:outputText rendered="#{registrationModeBean.additionalStudents.size() gt 0}"
                                           value="#{registrationModeBean.additionalStudents.size()}"/>

@@ -211,7 +211,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-release-plugin</artifactId>
-				<version>${maven.release.plugin.version}</version>
+				<version>3.0.0-M1</version>
 				<configuration>
 					<autoVersionSubmodules>true</autoVersionSubmodules>
 					<tagNameFormat>${maven.build.timestamp}_@{project.version}</tagNameFormat>
