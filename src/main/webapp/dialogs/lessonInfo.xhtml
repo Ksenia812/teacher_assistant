@@ -1,0 +1,127 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+>
+    <h:form id="lessonInfoForm" styleClass="edit-form">
+        <p:dialog header="#{msg['lessonInfo']}" widgetVar="lessonDialog" position="center" draggable="false"
+                  modal="true" showEffect="fade" hideEffect="fade" resizable="false" fitViewport="true"
+                  onHide="PF('lessonDialog').content.empty()">
+
+            <p:ajax event="close" listener="#{lessonBean.exit}"/>
+
+            <p:outputPanel id="lessonDetail" styleClass="edit-panel" rendered="#{lessonBean.lesson ne null}">
+                <p:panelGrid columns="2" columnClasses="label,value" styleClass="noBorder">
+
+                    <p:outputLabel for="stream" value="#{msg['lessonInfo.stream']}"/>
+                    <p:selectOneMenu id="stream"
+                                     value="#{lessonBean.lesson.stream}"
+                                     converter="entityConverter"
+                                     required="true"
+                                     disabled="#{not lessonBean.createMode}">
+                        <f:selectItem itemValue="#{null}" itemLabel="#{msg['select.stream']}"/>
+                        <f:selectItems value="#{sessionBean.streams}" var="stream" itemLabel="#{stream.name}"
+                                       itemValue="#{stream}"/>
+                        <p:ajax update=":lessonInfoForm:lessonDetail"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel for="discipline" value="#{msg['lessonInfo.discipline']}"
+                                   rendered="#{lessonBean.lesson.stream ne null and lessonBean.lesson.stream.discipline ne null}"/>
+                    <p:outputLabel id="discipline" value="#{lessonBean.lesson.stream.discipline.name}"
+                                   rendered="#{lessonBean.lesson.stream ne null and lessonBean.lesson.stream.discipline ne null}"/>
+
+                    <p:outputLabel for="department" value="#{msg['lessonInfo.department']}"
+                                   rendered="#{lessonBean.lesson.stream ne null and lessonBean.lesson.stream.department ne null}"/>
+                    <p:outputLabel id="department" value="#{lessonBean.lesson.stream.department.name}"
+                                   rendered="#{lessonBean.lesson.stream ne null and lessonBean.lesson.stream.department ne null}"/>
+
+                    <p:outputLabel for="course" value="#{msg['lessonInfo.course']}"
+                                   rendered="#{lessonBean.lesson.stream ne null and lessonBean.lesson.stream.course ne null}"/>
+                    <p:outputLabel id="course" value="#{lessonBean.lesson.stream.course}"
+                                   rendered="#{lessonBean.lesson.stream ne null and lessonBean.lesson.stream.course ne null}"/>
+
+
+                    <p:outputLabel for="lessonType" value="#{msg['lessonInfo.type']}"/>
+                    <h:outputText value="#{msg[lessonBean.lesson.type.key]}" rendered="#{not lessonBean.createMode}" />
+                    <p:selectOneButton id="lessonType" value="#{lessonBean.lesson.type}"
+                                       rendered="#{lessonBean.createMode}"
+                                       converter="lessonTypeConverter"
+                                       required="true"
+                                       styleClass="type">
+                        <f:selectItems value="#{lessonBean.lessonTypes}" var="type" itemLabel="#{msg[type.key]}"
+                                       itemValue="#{type}"/>
+                        <p:ajax update=":lessonInfoForm:lessonDetail"/>
+                    </p:selectOneButton>
+
+                    <p:outputLabel for="group" value="#{msg['lessonInfo.group']}"
+                                   rendered="#{lessonBean.lesson.type ne null and lessonBean.lesson.type.code ne 1}"/>
+                    <p:selectOneMenu id="group" value="#{lessonBean.lesson.group}"
+                                     converter="entityConverter"
+                                     required="true"
+                                     rendered="#{lessonBean.lesson.type ne null and lessonBean.lesson.type.code ne 1}"
+                                     disabled="#{not lessonBean.createMode}">
+                        <f:selectItem itemValue="#{null}" itemLabel="#{msg['select.group']}"/>
+                        <f:selectItems value="#{lessonBean.lesson.stream.groups}" var="group"
+                                       itemLabel="#{group.name}" itemValue="#{group}"/>
+                        <p:ajax update=":lessonInfoForm:lessonDetail"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel for="date" value="#{msg['lessonInfo.date']}"/>
+                    <p:calendar id="date"
+                                value="#{lessonBean.lesson.date}"
+                                converter="localDateConverter"
+                                pattern="dd.MM.yyyy"
+                                required="true">
+                        <p:ajax event="dateSelect" update=":lessonInfoForm:lessonDetail"/>
+                    </p:calendar>
+
+                    <p:outputLabel for="schedule" value="#{msg['lessonInfo.schedule']}"/>
+                    <p:selectOneButton id="schedule" value="#{lessonBean.lesson.schedule}"
+                                       converter="entityConverter" required="true" styleClass="time">
+                        <f:selectItems value="#{sessionBean.schedules}" var="schedule"
+                                       itemLabel="#{schedule.begin}"/>
+                        <p:ajax update=":lessonInfoForm:lessonDetail"/>
+                    </p:selectOneButton>
+
+                    <p:outputLabel for="description" value="#{msg['lessonInfo.description']}"/>
+                    <p:inputTextarea id="description" value="#{lessonBean.lesson.description}">
+                        <p:ajax update=":lessonInfoForm:lessonDetail"/>
+                    </p:inputTextarea>
+
+                    <h:selectBooleanCheckbox id="allPresent" value="#{lessonBean.allPresent}" disabled="#{not lessonBean.createMode}"/>
+                    <p:outputLabel for="allPresent" value="#{msg['lessonInfo.allPresent']}"/>
+
+                </p:panelGrid>
+
+                <p:outputPanel>
+                    <p:commandButton value="#{msg['btn.save']}"
+                                     update=":lessonInfoForm:lessonDetail"
+                                     icon="fa fa-fw fa-save">
+                        <f:actionListener binding="#{lessonBean.save()}"/>
+                        <f:actionListener binding="#{lessonBean.exit()}"/>
+                        <f:setPropertyActionListener value="#{null}" target="#{lessonsBean.lessons}"/>
+                    </p:commandButton>
+                    <p:commandButton value="#{msg['lessonInfo.btn.registration']}"
+                                     update=":lessonInfoForm:lessonDetail"
+                                     icon="fa fa-fw fa-rss">
+                        <f:actionListener binding="#{lessonBean.save()}"/>
+                        <f:actionListener binding="#{registrationModeBean.initLesson(lessonBean.lesson, propertiesBean.isLastLessonNotesLoadingEnabled)}"/>
+                        <f:actionListener binding="#{lessonBean.exit()}"/>
+                        <f:setPropertyActionListener value="#{null}" target="#{lessonsBean.lessons}"/>
+                        <f:setPropertyActionListener value="#{false}" target="#{menuBean.showMenu}"/>
+                        <f:setPropertyActionListener value="registrationMode" target="#{sessionBean.activeView}"/>
+                    </p:commandButton>
+                    <p:commandButton value="#{msg['lessonInfo.btn.next']}"
+                                     update=":lessonInfoForm:lessonDetail"
+                                     icon="fa fa-fw fa-arrow-right">
+                        <f:actionListener binding="#{lessonBean.save()}"/>
+                        <f:actionListener binding="#{lessonBean.initLesson(null)}"/>
+                        <f:setPropertyActionListener value="#{null}" target="#{lessonsBean.lessons}"/>
+                    </p:commandButton>
+                </p:outputPanel>
+            </p:outputPanel>
+        </p:dialog>
+    </h:form>
+</ui:composition>

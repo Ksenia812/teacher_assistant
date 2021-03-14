@@ -1,0 +1,87 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+>
+    <h:form id="groupsForm">
+        <p:panelGrid columns="3" styleClass="noBorder">
+            <p:selectBooleanCheckbox id="showClosed" value="#{groupsBean.showClosed}"/>
+            <p:outputLabel for="showClosed" value="#{msg['label.showClosed']}"/>
+
+            <p:commandButton value="#{msg['btn.search']}" icon="fa fa-fw fa-search"
+                             actionListener="#{groupsBean.search}"
+                             update=":groupsForm"/>
+        </p:panelGrid>
+
+        <p:dataTable id="groups"
+                     var="group"
+                     value="#{groupsBean.groups}"
+                     selection="#{groupsBean.selectedGroup}"
+                     rowKey="#{group.id}"
+                     selectionMode="single"
+                     sortBy="#{group.name}"
+                     filteredValue="#{groupsBean.filteredGroups}"
+                     emptyMessage="#{msg['label.emptyMessage']}">
+            <p:ajax event="filter" update="@this"/>
+
+            <f:facet name="header">
+                #{msg['groups']}
+            </f:facet>
+
+            <p:column headerText="#{msg['group.name']}"
+                      sortBy="#{group.name}"
+                      filterBy="#{group.name}"
+                      filterMatchMode="contains"
+            >
+                <h:outputText value="#{group.name}"/>
+            </p:column>
+
+            <p:column headerText="#{msg['group.department']}"
+                      sortBy="#{group.department.name}"
+                      filterBy="#{group.department.name}"
+                      filterMatchMode="contains"
+            >
+                <h:outputText value="#{group.department.name}"/>
+            </p:column>
+
+            <p:column headerText="#{msg['group.praepostor']}"
+                      sortBy="#{group.praepostor.fullName}"
+                      filterBy="#{group.praepostor.fullName}"
+                      filterMatchMode="startsWith"
+            >
+                <h:outputText value="#{group.praepostor.fullName}"/>
+            </p:column>
+        </p:dataTable>
+
+        <p:contextMenu for="groups">
+            <p:menuitem value="#{msg['option.view']}"
+                        update=":groupInfoForm"
+                        icon="ui-icon-search"
+                        actionListener="#{groupBean.initGroup(groupsBean.selectedGroup)}">
+                <p:resetInput target=":groupInfoForm:groupInfoDetail"/>
+            </p:menuitem>
+            <p:menuitem value="#{msg['option.remove']}"
+                        update=":groupsForm"
+                        icon="ui-icon-close"
+                        styleClass="red"
+                        actionListener="#{groupsBean.removeGroup(groupsBean.selectedGroup)}">
+                <p:confirm header="#{msg['warning']}" message="#{msg['warning.sure.delete']}" icon="ui-icon-alert"/>
+            </p:menuitem>
+            <p:menuitem value="#{msg['option.removeCascade']}"
+                        update=":groupsForm"
+                        icon="ui-icon-close"
+                        styleClass="red"
+                        actionListener="#{groupsBean.removeGroupCascade(groupsBean.selectedGroup)}">
+                <p:confirm header="#{msg['warning']}" message="#{msg['warning.sure.delete']}" icon="ui-icon-alert"/>
+            </p:menuitem>
+        </p:contextMenu>
+
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+            <p:commandButton value="#{msg['label.yes']}" type="button" styleClass="ui-confirmdialog-yes"
+                             icon="ui-icon-check"/>
+            <p:commandButton value="#{msg['label.no']}" type="button" styleClass="ui-confirmdialog-no"
+                             icon="ui-icon-close"/>
+        </p:confirmDialog>
+    </h:form>
+</ui:composition>

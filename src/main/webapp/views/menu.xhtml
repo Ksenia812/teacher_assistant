@@ -1,0 +1,213 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+>
+    <h:form id="menuForm" styleClass="menu">
+        <p:growl id="messages" showDetail="true" escape="false"/>
+
+        <p:menubar id="menu" autoDisplay="#{false}" styleClass="alignMenuItems" rendered="#{menuBean.showMenu}">
+            <p:submenu label="#{msg['menu.settings']}" icon="fa fa-fw fa-wrench">
+                <p:menuitem value="#{msg['menu.alarm']}"
+                            icon="fa fa-fw fa-clock-o"
+                            actionListener="#{alarmBean.initAlarm}"
+                            update=":alarmsForm"
+                            disabled="#{not sessionBean.connected}"/>
+                <p:menuitem value="#{msg['notification']}"
+                            icon="fa fa-fw fa-exclamation-triangle"
+                            actionListener="#{notificationSettingsBean.init}"
+                            update=":notificationSettingForm"
+                            disabled="#{not sessionBean.connected}"/>
+                <p:menuitem value="#{msg['settings.properties']}"
+                            icon="fa fa-fw fa-file"
+                            actionListener="#{propertiesBean.init}"
+                            update=":propertiesForm"
+                            disabled="#{not sessionBean.connected}"/>
+                <p:menuitem value="#{msg['settings.autobackup']}"
+                            icon="fa fa-fw fa-file"
+                            actionListener="#{backupBean.init}"
+                            update=":backupForm"
+                            disabled="#{not sessionBean.connected}"/>
+                <p:separator/>
+                <p:menuitem value="#{msg['menu.refresh']}"
+                            icon="fa fa-fw fa-refresh"
+                            actionListener="#{sessionBean.initData}"
+                            update="@([id$=wrapper])"
+                            disabled="#{not sessionBean.connected}"/>
+
+                <p:menuitem value="#{msg['menu.connection.connectReader']}"
+                            icon="fa fa-fw fa-toggle-off"
+                            actionListener="#{serialBean.startRecord}"
+                            update="@([id$=wrapper])"
+                            rendered="#{not serialBean.recordStarted}"
+                            disabled="#{not sessionBean.connected}"/>
+                <p:menuitem value="#{msg['menu.connection.disconnectReader']}"
+                            icon="fa fa-fw fa-toggle-on"
+                            actionListener="#{serialBean.stopRecord}"
+                            update="@([id$=wrapper])"
+                            disabled="#{not sessionBean.connected}"
+                            rendered="#{serialBean.recordStarted}"/>
+
+
+                <p:separator/>
+                <p:menuitem disabled="#{true}"
+                            icon="fa fa-fw fa-database"
+                            value="#{sessionBean.connected ? msg['menu.connection.connected']
+                                                    : msg['menu.connection.disconnected']}"
+                            styleClass="#{sessionBean.connected ? 'connected' : 'disconnected'}"/>
+                <p:menuitem disabled="#{true}"
+                            icon="ui-icon-signal-diag"
+                            value="#{serialBean.recordStarted ? msg['menu.connection.connected']
+                                                    : msg['menu.connection.disconnected']}"
+                            styleClass="#{serialBean.recordStarted ? 'connected' : 'disconnected'}"/>
+            </p:submenu>
+
+            <p:submenu label="#{msg['menu.file.new']}" icon="fa fa-fw fa-plus"
+                       rendered="#{sessionBean.connected}">
+                <p:menuitem value="#{msg['menu.file.new.discipline']}" icon="fa fa-fw fa-paperclip"
+                            update=":disciplineInfoForm" oncomplete="PF('disciplineDialog').show()">
+                    <f:setPropertyActionListener value="#{newInstanceOfDiscipline}"
+                                                 target="#{disciplineBean.selectedDiscipline}"/>
+                    <p:resetInput target=":disciplineInfoForm:disciplineDetail"/>
+                </p:menuitem>
+
+                <p:menuitem value="#{msg['menu.file.new.department']}" icon="fa fa-fw fa-list-alt"
+                            update=":departmentInfoForm" oncomplete="PF('departmentDialog').show()">
+                    <f:setPropertyActionListener value="#{newInstanceOfDepartment}"
+                                                 target="#{departmentBean.selectedDepartment}"/>
+                    <p:resetInput target=":departmentInfoForm:departmentDetail"/>
+                </p:menuitem>
+
+                <p:menuitem value="#{msg['menu.file.new.stream']}"
+                            icon="fa fa-fw fa-code-fork"
+                            update=":streamInfoForm"
+                            actionListener="#{streamBean.initStream(null)}">
+                    <p:resetInput target=":streamInfoForm:streamDetail"/>
+                </p:menuitem>
+
+                <p:menuitem value="#{msg['menu.file.new.group']}"
+                            icon="fa fa-fw fa-users"
+                            update=":groupInfoForm"
+                            actionListener="#{groupBean.initGroup(null)}">
+                    <p:resetInput target=":groupInfoForm:groupInfoDetail"/>
+                </p:menuitem>
+
+                <p:menuitem value="#{msg['menu.file.new.student']}"
+                            icon="fa fa-fw fa-user"
+                            update=":studentInfoForm"
+                            actionListener="#{studentBean.initStudent(null)}">
+                    <p:resetInput target=":studentInfoForm:studentDetail"/>
+                </p:menuitem>
+
+                <p:menuitem value="#{msg['menu.load.photo']}" icon="fa fa-fw fa-file-photo-o"
+                            actionListener="#{menuBean.loadStudentsPhoto}"/>
+
+                <p:menuitem value="#{msg['menu.load.csv']}" icon="fa fa-fw fa-arrow-circle-o-down"
+                            actionListener="#{menuBean.loadCSV}"/>
+            </p:submenu>
+
+            <p:submenu label="#{msg['menu.show']}" icon="fa fa-fw fa-bars"
+                       rendered="#{sessionBean.connected}">
+                <p:menuitem value="#{msg['menu.show.disciplines']}" icon="fa fa-fw fa-paperclip"
+                            actionListener="#{menuBean.changeView('disciplines')}" update="@([id$=views])"/>
+                <p:menuitem value="#{msg['menu.show.departments']}" icon="fa fa-fw fa-list-alt"
+                            actionListener="#{menuBean.changeView('departments')}" update="@([id$=views])"/>
+                <p:menuitem value="#{msg['menu.show.streams']}" icon="fa fa-fw fa-code-fork"
+                            actionListener="#{menuBean.changeView('streams')}" update="@([id$=views])"/>
+                <p:menuitem value="#{msg['menu.show.groups']}" icon="fa fa-fw fa-users"
+                            actionListener="#{menuBean.changeView('groups')}" update="@([id$=views])"/>
+                <p:menuitem value="#{msg['menu.show.students']}" icon="fa fa-fw fa-user"
+                            actionListener="#{menuBean.changeView('students')}" update="@([id$=views])"/>
+                <p:menuitem value="#{msg['menu.show.students.all']}" icon="fa fa-fw fa-user"
+                            actionListener="#{menuBean.openAllStudentsPage()}" update="@([id$=views])"/>
+            </p:submenu>
+
+            <p:submenu label="#{msg['menu.modes']}" icon="fa fa-fw fa-list-alt" rendered="#{sessionBean.connected}">
+                <p:menuitem value="#{msg['option.registrationMode']}"
+                            update="@([id$=wrapper])"
+                            icon="fa fa-fw fa-rss"
+                            actionListener="#{registrationModeBean.initLesson(lessonsBean.getFirstLesson(), lessonsBean.getLessons(), propertiesBean.isLastLessonNotesLoadingEnabled)}"
+                            disabled="#{(lessonsBean.getFirstLesson() eq null or sessionBean.activeView eq 'registrationMode')}">
+                    <f:setPropertyActionListener value="registrationMode" target="#{sessionBean.activeView}"/>
+                    <f:setPropertyActionListener value="#{false}" target="#{menuBean.showMenu}"/>
+                </p:menuitem>
+                <p:menuitem value="#{msg['option.shortLessonMode']}"
+                            update="@([id$=wrapper])"
+                            icon="fa fa-fw fa-dedent"
+                            actionListener="#{shortLessonModeBean.init(lessonsBean.getFirstLesson())}"
+                            disabled="#{(lessonsBean.getFirstLesson() eq null or sessionBean.activeView eq 'shortLessonMode')}">
+                    <f:setPropertyActionListener value="shortLessonMode" target="#{sessionBean.activeView}"/>
+                    <f:setPropertyActionListener value="#{false}" target="#{menuBean.showMenu}"/>
+                </p:menuitem>
+                <p:menuitem value="#{msg['option.lessonMode']}"
+                            update="@([id$=wrapper])"
+                            icon="fa fa-fw fa-dedent"
+                            actionListener="#{lessonModeBean.initLessonMode(lessonsBean.getFirstLesson())}"
+                            disabled="#{(lessonsBean.getFirstLesson() eq null or sessionBean.activeView eq 'lessonMode')}">
+                    <f:setPropertyActionListener value="lessonMode" target="#{sessionBean.activeView}"/>
+                    <f:setPropertyActionListener value="#{false}" target="#{menuBean.showMenu}"/>
+                </p:menuitem>
+                <p:menuitem value="#{msg['option.photoMode']}"
+                            update="@([id$=wrapper])"
+                            icon="fa fa-fw fa-file-image-o"
+                            actionListener="#{lessonModeBean.initLessonMode(lessonsBean.getFirstLesson())}"
+                            disabled="#{(lessonsBean.getFirstLesson() eq null or sessionBean.activeView eq 'photoMode')}">
+                    <f:setPropertyActionListener value="photoMode" target="#{sessionBean.activeView}"/>
+                    <f:setPropertyActionListener value="#{false}" target="#{menuBean.showMenu}"/>
+                </p:menuitem>
+                <p:menuitem value="#{msg['option.lessons']}"
+                            icon="fa fa-fw fa-calendar"
+                            update="@([id$=wrapper])"
+                            disabled="#{sessionBean.activeView eq 'lessons'}">
+                    <f:setPropertyActionListener value="lessons" target="#{sessionBean.activeView}"/>
+                    <f:setPropertyActionListener value="#{true}" target="#{menuBean.showMenu}"/>
+                </p:menuitem>
+                <p:menuitem value="#{msg['option.studentMode']}"
+                            update="@([id$=wrapper])"
+                            icon="fa fa-fw fa-male"
+                            actionListener="#{studentModeBean.initStudentMode(null, null)}">
+                    <f:setPropertyActionListener value="#{false}" target="#{menuBean.showMenu}"/>
+                    <f:setPropertyActionListener value="studentMode" target="#{sessionBean.activeView}"/>
+                    <f:setPropertyActionListener value="#{lessonsBean.getFirstLesson()}" target="#{lessonModeBean.lesson}"/>
+                </p:menuitem>
+            </p:submenu>
+            <p:menuitem value="#{msg['menu.new.lesson']}"
+                        icon="fa fa-fw fa-plus"
+                        update=":lessonInfoForm"
+                        actionListener="#{lessonBean.initLesson(null)}"
+                        style="right: 370px;"
+                        styleClass="menu-items-right"
+                        rendered="#{sessionBean.connected}">
+                <p:resetInput target=":lessonInfoForm:lessonDetail"/>
+            </p:menuitem>
+            <p:menuitem value="#{msg['option.registrationMode']}"
+                        update="@([id$=wrapper])"
+                        icon="fa fa-fw fa-rss"
+                        style="right: 232px;"
+                        styleClass="menu-items-right"
+                        actionListener="#{registrationModeBean.initLesson(lessonsBean.getFirstLesson(), lessonsBean.getLessons(), propertiesBean.isLastLessonNotesLoadingEnabled)}"
+                        disabled="#{(lessonsBean.getFirstLesson() eq null or sessionBean.activeView eq 'registrationMode')}">
+                <f:setPropertyActionListener value="registrationMode" target="#{sessionBean.activeView}"/>
+                <f:setPropertyActionListener value="#{false}" target="#{menuBean.showMenu}"/>
+            </p:menuitem>
+            <p:menuitem value="#{msg['option.studentMode']}"
+                        update="@([id$=wrapper])"
+                        icon="fa fa-fw fa-male"
+                        actionListener="#{studentModeBean.initStudentMode(null, null)}"
+                        style="right: 137px;"
+                        styleClass="menu-items-right">
+                <f:setPropertyActionListener value="#{false}" target="#{menuBean.showMenu}"/>
+                <f:setPropertyActionListener value="studentMode" target="#{sessionBean.activeView}"/>
+                <f:setPropertyActionListener value="#{lessonsBean.getFirstLesson()}" target="#{lessonModeBean.lesson}"/>
+            </p:menuitem>
+            <p:menuitem value="#{msg['menu.show.lessons']}" icon="fa fa-fw fa-calendar"
+                        actionListener="#{menuBean.changeView('lessons')}" update="@([id$=views])"
+                        style="right: 3px;"
+                        styleClass="menu-items-right"
+                        rendered="#{sessionBean.connected}" disabled="#{sessionBean.activeView eq 'lessons'}">
+                <f:actionListener binding="#{registrationModeBean.clear()}"/>
+            </p:menuitem>
+        </p:menubar>
+    </h:form>
+</ui:composition>
