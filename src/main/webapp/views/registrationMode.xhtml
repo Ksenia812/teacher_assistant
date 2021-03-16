@@ -7,6 +7,14 @@
                 xmlns:pe="http://primefaces.org/ui/extensions" xmlns:c="http://java.sun.com/jsp/jstl/core"
 >
     <h:form id="lessonForm">
+        <script type="text/javascript">
+            function showDialog() {
+                // PF('amountOfAdditionalStudents').show();
+                let elementById = document.getElementById('lessonForm:showAdditionalStudentsBtn');
+                elementById.click();
+            }
+        </script>
+
         <p:socket onMessage="spawnNotification" channel="/notify"/>
         <p:socket channel="/register">
             <p:ajax event="message"
@@ -30,11 +38,11 @@
                                        styleClass="font-size-20pt margin-top-20px margin-bottom-20px"
                                        value="#{registrationModeBean.processedStudent.groupNames}"/>
                         <h:outputText styleClass="lowercase dark-red" escape="false"
-                                       value="#{registrationModeBean.getStudentSkip(registrationModeBean.processedStudent)}"
-                                       rendered="#{not registrationModeBean.studentNotExist}"/>
+                                      value="#{registrationModeBean.getStudentSkip(registrationModeBean.processedStudent)}"
+                                      rendered="#{not registrationModeBean.studentNotExist}"/>
                         <h:outputText styleClass="lowercase red" escape="false"
-                                       value="#{registrationModeBean.getAdditionLessonInfo(registrationModeBean.processedStudent)}"
-                                       rendered="#{not registrationModeBean.studentNotExist}"/>
+                                      value="#{registrationModeBean.getAdditionLessonInfo(registrationModeBean.processedStudent)}"
+                                      rendered="#{not registrationModeBean.studentNotExist}"/>
                         <p:outputLabel value="#{msg['label.reRegistration']}"
                                        styleClass="font-size-12pt blue margin-top-20px"
                                        rendered="#{registrationModeBean.reRegistration}"/>
@@ -166,11 +174,15 @@
                             <h:outputText value="#{msg['lesson.students.absent']}"/>
                             <h:outputText value="#{registrationModeBean.absentStudents.size()}"/>
 
-                            <h:commandButton rendered="#{registrationModeBean.additionalStudents.size() gt 0}"
-                                      actionListener="#{registrationModeBean.showAdditionalStudents()}"
-                                          value="#{msg['lesson.students.additional']}"/>
+                            <h:outputLabel onmouseover="showDialog()"
+                                           rendered="#{registrationModeBean.additionalStudents.size() gt 0}"
+                                           value="#{msg['lesson.students.additional']}"/>
                             <h:outputText rendered="#{registrationModeBean.additionalStudents.size() gt 0}"
                                           value="#{registrationModeBean.additionalStudents.size()}"/>
+
+                            <h:commandButton id="showAdditionalStudentsBtn"
+                                             styleClass="hidden"
+                                             actionListener="#{registrationModeBean.showAdditionalStudents()}"/>
                         </p:panelGrid>
                         <p:panel>
                             <p:outputLabel value="#{registrationModeBean.selectedLesson.stream.name}"/>
@@ -558,9 +570,10 @@
                     </h:panelGrid>
                 </ui:repeat>
                 <p:separator/>
-                <p:commandButton actionListener="#{registrationModeBean.initLesson(registrationModeBean.lastLecture, propertiesBean.isLastLessonNotesLoadingEnabled)}"
-                                 update=":lessonForm"
-                                 value="#{msg['lecture']}" rendered="#{registrationModeBean.lastLecture != null}"/>
+                <p:commandButton
+                    actionListener="#{registrationModeBean.initLesson(registrationModeBean.lastLecture, propertiesBean.isLastLessonNotesLoadingEnabled)}"
+                    update=":lessonForm"
+                    value="#{msg['lecture']}" rendered="#{registrationModeBean.lastLecture != null}"/>
                 <ui:repeat var="note"
                            value="#{registrationModeBean.lastLecture.notes}">
                     <h:panelGrid columns="3" columnClasses="w300px, w20px">
@@ -569,9 +582,10 @@
                     </h:panelGrid>
                 </ui:repeat>
                 <p:separator/>
-                <p:commandButton actionListener="#{registrationModeBean.initLesson(registrationModeBean.lastPractice, propertiesBean.isLastLessonNotesLoadingEnabled)}"
-                                 update=":lessonForm"
-                                 value="#{msg['practical']}" rendered="#{registrationModeBean.lastPractice != null}"/>
+                <p:commandButton
+                    actionListener="#{registrationModeBean.initLesson(registrationModeBean.lastPractice, propertiesBean.isLastLessonNotesLoadingEnabled)}"
+                    update=":lessonForm"
+                    value="#{msg['practical']}" rendered="#{registrationModeBean.lastPractice != null}"/>
                 <ui:repeat var="note"
                            value="#{registrationModeBean.lastPractice.notes}">
                     <h:panelGrid columns="3" columnClasses="w300px, w20px">

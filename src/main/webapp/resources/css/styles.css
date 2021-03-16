@@ -881,3 +881,7 @@ body {
 .student.student-info span {
     display: inline-flex;
 }
+
+.hidden {
+    display: none;
+}
