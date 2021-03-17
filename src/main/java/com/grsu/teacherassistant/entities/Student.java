@@ -1,12 +1,14 @@
 package com.grsu.teacherassistant.entities;
 
 import com.grsu.teacherassistant.models.SkipInfo;
+import com.grsu.teacherassistant.models.StudentSkips;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Where;
 
 import javax.faces.bean.ManagedBean;
 import javax.persistence.*;
+import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -17,19 +19,31 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 /**
  * @author Pavel Zaychick
  */
-@SqlResultSetMapping(
-    name = "SkipInfoMapping",
-    classes = {
-        @ConstructorResult(
-            targetClass = SkipInfo.class,
-            columns = {
-                @ColumnResult(name = "studentId", type = Integer.class),
-                @ColumnResult(name = "lessonType", type = Integer.class),
-                @ColumnResult(name = "count", type = int.class)
-            }
-        )
-    }
-)
+@SqlResultSetMappings({
+    @SqlResultSetMapping(
+        name = "SkipInfoMapping",
+        classes = {
+            @ConstructorResult(
+                targetClass = SkipInfo.class,
+                columns = {
+                    @ColumnResult(name = "studentId", type = Integer.class),
+                    @ColumnResult(name = "lessonType", type = Integer.class),
+                    @ColumnResult(name = "count", type = int.class)
+                }
+            )
+        }),
+    @SqlResultSetMapping(
+        name = "SkipDate",
+        classes = {
+            @ConstructorResult(
+                targetClass = StudentSkips.class,
+                columns = {
+                    @ColumnResult(name = "skipDate", type = Date.class),
+                    @ColumnResult(name = "lessonType", type = Integer.class)
+                }
+            )
+        })
+})
 @NamedNativeQueries({
     @NamedNativeQuery(
         name = "SkipInfoQuery",
@@ -45,7 +59,7 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
         resultSetMapping = "SkipInfoMapping"),
     @NamedNativeQuery(
         name = "StudentSkipInfoQuery",
-        query = "select st.id as studentId, l.type_id as lessonType, count(*) as count\n" +
+        query = "select st.id as studentId, l.type_id as lessonType, count(*) as count \n" +
             "from STUDENT st\n" +
             "join STUDENT_LESSON sl on sl.student_id = st.id\n" +
             "join LESSON l on l.id = sl.lesson_id and l.type_id in (1, 2, 3)\n" +
@@ -55,6 +69,27 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
             "and ((date(l.date) < date('now', 'localtime')) or (date(l.date) = date('now', 'localtime') and time(sch.begin) <= time('now', 'localtime')) or l.id = :lessonId)\n" +
             "group by st.id, str.id, l.type_id",
         resultSetMapping = "SkipInfoMapping"),
+    @NamedNativeQuery(
+        name = "StudentSkipsDatesQuery",
+        query = "select l.date\n" +
+            "from STUDENT st\n" +
+            "join STUDENT_LESSON sl on sl.student_id = st.id\n" +
+            "join LESSON l on l.id = sl.lesson_id and l.type_id in (1, 2, 3)\n" +
+            "join SCHEDULE sch on sch.id = l.schedule_id " +
+            "join STREAM str on str.id = l.stream_id\n" +
+            "where st.id in (:studentId) and (sl.registered is null or sl.registered = 0) " +
+            "and ((date(l.date) < date('now', 'localtime')) or (date(l.date) = date('now', 'localtime') and time(sch.begin) <= time('now', 'localtime')) or l.id = :lessonId)\n"),
+
+    @NamedNativeQuery(
+        name = "StudentSkipsLessonsQuery",
+        query = "select l.type_id \n" +
+            "from STUDENT st\n" +
+            "join STUDENT_LESSON sl on sl.student_id = st.id\n" +
+            "join LESSON l on l.id = sl.lesson_id and l.type_id in (1, 2, 3)\n" +
+            "join SCHEDULE sch on sch.id = l.schedule_id " +
+            "join STREAM str on str.id = l.stream_id\n" +
+            "where st.id in (:studentId) and (sl.registered is null or sl.registered = 0) " +
+            "and ((date(l.date) < date('now', 'localtime')) or (date(l.date) = date('now', 'localtime') and time(sch.begin) <= time('now', 'localtime')) or l.id = :lessonId)\n"),
     @NamedNativeQuery(
         name = "AdditionalStudents",
         query = "SELECT st.*\n" +
@@ -133,6 +168,14 @@ public class Student implements AssistantEntity, Person {
 
     @OneToMany(mappedBy = "praepostor")
     private List<Group> praepostorGroups;
+
+    public Map<Integer, StudentLesson> getStudentLessons() {
+        return studentLessons;
+    }
+
+    public List<Note> getNotes() {
+        return notes;
+    }
 
     public String getFullName() {
         if (lastName == null) {
