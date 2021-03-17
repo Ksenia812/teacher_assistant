@@ -28,6 +28,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
@@ -73,6 +74,7 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
     private List<Lesson> orderedLessons;
     private Lesson selectedLesson;
     private Student processedStudent;
+    //private List<StudentLesson> processedStudentSkips;
 
     private List<Student> presentStudents;
     private List<Student> absentStudents;
@@ -120,6 +122,40 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
     private boolean nextLessonAvailable = false;
     private Lesson lastLecture;
     private Lesson lastPractice;
+
+    //gets list of students skips dates and lessons and formats for ui
+    public List<String> getStudentSkips(){
+        LocaleUtils localeUtils = new LocaleUtils(localeBean.getLocale());
+        StudentSkips processedStudentSkips = StudentDAO.getStudentSkipsDates(processedStudent.getId(), selectedLesson.getId());
+        List<String> skips = new ArrayList<>();
+        List<Date> skipsDates = processedStudentSkips.getSkipDate();
+        List<LessonType> lessonTypes = processedStudentSkips.getLessonType();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
+
+        for(int i=0; i < skipsDates.size(); i++){
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append(formatter.format(skipsDates.get(i)));
+            stringBuilder.append(" ");
+
+            switch(lessonTypes.get(i)){
+                case LECTURE: {
+                    stringBuilder.append(localeUtils.getMessage("lecture"));
+                    break;
+                }
+                case PRACTICAL: {
+                    stringBuilder.append(localeUtils.getMessage("practical"));
+                    break;
+                }
+                case LAB: {
+                    stringBuilder.append(localeUtils.getMessage("lab"));
+                    break;
+                }
+            }
+            skips.add(stringBuilder.toString());
+        }
+
+        return skips;
+    }
 
     public void initLesson(Lesson lesson, boolean forceLoading) {
         this.initLesson(lesson, null, forceLoading);
@@ -561,7 +597,6 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
         List<Integer> studentIds = students.stream().map(Student::getId).collect(Collectors.toList());
 
         List<SkipInfo> studentSkipInfo = StudentDAO.getStudentSkipInfo(studentIds, selectedLesson.getStream().getId(), selectedLesson.getId());
-
         for (Integer id : studentIds) {
             skipInfo.remove(id);
         }
