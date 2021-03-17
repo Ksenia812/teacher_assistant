@@ -2,7 +2,9 @@ package com.grsu.teacherassistant.dao;
 
 import com.grsu.teacherassistant.constants.Constants;
 import com.grsu.teacherassistant.entities.Student;
+import com.grsu.teacherassistant.models.LessonType;
 import com.grsu.teacherassistant.models.SkipInfo;
+import com.grsu.teacherassistant.models.StudentSkips;
 import com.grsu.teacherassistant.utils.db.DBSessionFactory;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -10,9 +12,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.PersistenceException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class StudentDAO {
     private static final Logger LOGGER = LoggerFactory.getLogger(StudentDAO.class);
@@ -113,6 +118,34 @@ public class StudentDAO {
             LOGGER.info("<== getStudentSkipInfo(); " + (System.currentTimeMillis() - t));
         }
         return null;
+    }
+
+    //gets student's skips dates and lessons
+    public static StudentSkips getStudentSkipsDates(Integer studentId, int lessonId){
+        Session session = DBSessionFactory.getSession();
+        Query queryDates = session.createNamedQuery("StudentSkipsDatesQuery");
+        queryDates.setParameter("studentId", studentId);
+        queryDates.setParameter("lessonId", lessonId);
+        List<Date> dates = new ArrayList<>();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        for(Object date : queryDates.list()){
+            try {
+                dates.add(formatter.parse((String) date));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        Query queryLessons = session.createNamedQuery("StudentSkipsLessonsQuery");
+        queryLessons.setParameter("studentId", studentId);
+        queryLessons.setParameter("lessonId", lessonId);
+
+        List<LessonType> lessonTypes = new ArrayList<>();
+        for(Object lesson : queryLessons.list()){
+            lessonTypes.add(LessonType.getLessonTypeByCode(((Integer)lesson)));
+        }
+
+        return new StudentSkips(dates, lessonTypes);
     }
 
     public static List<Student> getAdditionalStudents(int lessonId) {
