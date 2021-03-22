@@ -148,6 +148,25 @@ public class StudentDAO {
         return new StudentSkips(dates, lessonTypes);
     }
 
+    public static List<Date> getStudentSkipsByLessonType(Integer studentId, int lessonTypeCode, int lessonId){
+        Session session = DBSessionFactory.getSession();
+        Query queryDates = session.createNamedQuery("StudentSkipsByLessonTypeQuery");
+        queryDates.setParameter("studentId", studentId);
+        queryDates.setParameter("lessonTypeId", lessonTypeCode);
+        queryDates.setParameter("lessonId", lessonId);
+
+        List<Date> dates = new ArrayList<>();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        for(Object date : queryDates.list()){
+            try {
+                dates.add(formatter.parse((String) date));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        return dates;
+    }
+
     public static List<Student> getAdditionalStudents(int lessonId) {
         Session session = DBSessionFactory.getSession();
         try {

@@ -91,6 +91,16 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
             "where st.id in (:studentId) and (sl.registered is null or sl.registered = 0) " +
             "and ((date(l.date) < date('now', 'localtime')) or (date(l.date) = date('now', 'localtime') and time(sch.begin) <= time('now', 'localtime')) or l.id = :lessonId)\n"),
     @NamedNativeQuery(
+        name = "StudentSkipsByLessonTypeQuery",
+        query = "select l.date \n" +
+            "from STUDENT st\n" +
+            "join STUDENT_LESSON sl on sl.student_id = st.id\n" +
+            "join LESSON l on l.id = sl.lesson_id and l.type_id = :lessonTypeId\n" +
+            "join SCHEDULE sch on sch.id = l.schedule_id " +
+            "join STREAM str on str.id = l.stream_id\n" +
+            "where st.id in (:studentId) and (sl.registered is null or sl.registered = 0) " +
+            "and ((date(l.date) < date('now', 'localtime')) or (date(l.date) = date('now', 'localtime') and time(sch.begin) <= time('now', 'localtime')) or l.id = :lessonId)\n"),
+    @NamedNativeQuery(
         name = "AdditionalStudents",
         query = "SELECT st.*\n" +
             "FROM STUDENT st\n" +
