@@ -37,20 +37,73 @@
                                        styleClass="font-size-20pt margin-top-20px margin-bottom-20px"
                                        value="#{registrationModeBean.processedStudent.groupNames}"/>
 
-                        <h:outputLink id="noteStudent" value="#" style="text-decoration: none" >
+                        <!--All student's skips(total and by lessons type)
+                        Was replaced with separate tags-->
+                        <!--<h:outputLink id="studentSkips" value="#" style="text-decoration: none" >
                             <h:outputText styleClass="lowercase dark-red" escape="false"
                                           value="#{registrationModeBean.getStudentSkip(registrationModeBean.processedStudent)}"
                                           rendered="#{not registrationModeBean.studentNotExist}"/>
+                        </h:outputLink>-->
+
+                        <h:outputLink id="studentTotalSkips" value="#" style="text-decoration: none" >
+                            <h:outputText styleClass="lowercase dark-red" escape="false"
+                                          value="#{registrationModeBean.getTotalStudentSkips(registrationModeBean.processedStudent)}"
+                                          rendered="#{not registrationModeBean.studentNotExist}"/>
                         </h:outputLink>
 
-                        <!--Tooltip with skipped lessons' dates-->
-                        <p:tooltip for="noteStudent" position="bottom">
+                        <!--Student skips info-->
+                        <h:outputLink id="studentLectureSkips" value="#" style="text-decoration: none" >
+                            <h:outputText styleClass="lowercase dark-red" escape="false"
+                                          value="#{registrationModeBean.getStudentSkipsByLessonType(registrationModeBean.processedStudent, 1)}"
+                                          rendered="#{not registrationModeBean.studentNotExist}"/>
+                        </h:outputLink>
+                        <h:outputText value="/" styleClass="lowercase dark-red" escape="false"/>
+                        <h:outputLink id="studentPracticalSkips" value="#" style="text-decoration: none" >
+                            <h:outputText styleClass="lowercase dark-red" escape="false"
+                                          value="#{registrationModeBean.getStudentSkipsByLessonType(registrationModeBean.processedStudent, 2)}"
+                                          rendered="#{not registrationModeBean.studentNotExist}"/>
+                        </h:outputLink>
+                        <h:outputText value="/" styleClass="lowercase dark-red" escape="false"/>
+                        <h:outputLink id="studentLabSkips" value="#" style="text-decoration: none" >
+                            <h:outputText styleClass="lowercase dark-red" escape="false"
+                                          value="#{registrationModeBean.getStudentSkipsByLessonType(registrationModeBean.processedStudent, 3)}"
+                                          rendered="#{not registrationModeBean.studentNotExist}"/>
+                        </h:outputLink>
+
+                        <!--Tooltips with skipped lessons' dates-->
+                        <p:tooltip for="studentTotalSkips" position="bottom">
                             <ui:repeat var="skip" value="#{registrationModeBean.getStudentSkips()}">
                                 <h:panelGrid columns="1" styleClass="w100pc">
                                     <h:outputText value="#{skip}"/>
                                 </h:panelGrid>
                             </ui:repeat>
                         </p:tooltip>
+
+                        <p:tooltip for="studentLectureSkips" position="bottom">
+                            <ui:repeat var="skip" value="#{registrationModeBean.getStudentSkipsDatesByLessonType(1)}">
+                                <h:panelGrid columns="1" styleClass="w100pc">
+                                    <h:outputText value="#{skip}"/>
+                                </h:panelGrid>
+                            </ui:repeat>
+                        </p:tooltip>
+
+                        <p:tooltip for="studentPracticalSkips" position="bottom">
+                            <ui:repeat var="skip" value="#{registrationModeBean.getStudentSkipsDatesByLessonType(2)}">
+                                <h:panelGrid columns="1" styleClass="w100pc">
+                                    <h:outputText value="#{skip}"/>
+                                </h:panelGrid>
+                            </ui:repeat>
+                        </p:tooltip>
+
+                        <p:tooltip for="studentLabSkips" position="bottom">
+                            <ui:repeat var="skip" value="#{registrationModeBean.getStudentSkipsDatesByLessonType(3)}">
+                                <h:panelGrid columns="1" styleClass="w100pc">
+                                    <h:outputText value="#{skip}"/>
+                                </h:panelGrid>
+                            </ui:repeat>
+                        </p:tooltip>
+
+
                         <h:outputText styleClass="lowercase red" escape="false"
                                        value="#{registrationModeBean.getAdditionLessonInfo(registrationModeBean.processedStudent)}"
                                        rendered="#{not registrationModeBean.studentNotExist}"/>
