@@ -157,6 +157,10 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
         return skips;
     }
 
+    public int getAbsentStudentsPercent(){
+        return (int)Math.round(1.0 * absentStudents.size() / lessonStudents.size() * 100);
+    }
+
     public void initLesson(Lesson lesson, boolean forceLoading) {
         this.initLesson(lesson, null, forceLoading);
     }

@@ -183,7 +183,10 @@
                                 value="#{registrationModeBean.presentStudents.size() - registrationModeBean.additionalStudents.size()}"/>
 
                             <h:outputText value="#{msg['lesson.students.absent']}"/>
-                            <h:outputText value="#{registrationModeBean.absentStudents.size()}"/>
+
+                            <!--added absent students percent instead of progressbar-->
+                            <h:outputText id="registrationProgress" value="#{registrationModeBean.absentStudents.size()}/
+                            #{registrationModeBean.getAbsentStudentsPercent()}%"/>
 
                             <h:commandButton rendered="#{registrationModeBean.additionalStudents.size() gt 0}"
                                       actionListener="#{registrationModeBean.showAdditionalStudents()}"
@@ -363,10 +366,11 @@
                     <p:clock pattern="HH:mm:ss"/>
                 </p:panel>
 
-                <p:progressBar id="registrationProgress"
+                <!--Absent students progress bar-->
+                <!--<p:progressBar id="registrationProgress"
                                styleClass="registration-progress ui-widget-header margin-bottom-10px margin-top-10px"
                                value="#{((registrationModeBean.presentStudents.size() - registrationModeBean.additionalStudents.size()) / registrationModeBean.lessonStudents.size()) * 100}"
-                               labelTemplate="{value}%" displayOnly="true"/>
+                               labelTemplate="{value}%" displayOnly="true"/>-->
 
                 <p:photoCam id="camera"
                             widgetVar="camera"
