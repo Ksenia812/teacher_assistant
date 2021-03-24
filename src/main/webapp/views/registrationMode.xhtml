@@ -79,7 +79,9 @@
                             </ui:repeat>
                         </p:tooltip>
 
-                        <p:tooltip for="studentLectureSkips" position="bottom">
+                        <p:tooltip for="studentLectureSkips" position="bottom"
+                                rendered="#{registrationModeBean.getStudentSkipsDatesByLessonType(1).size() gt 0}">
+                            <h:outputText value="#{msg['lecture']}"/>
                             <ui:repeat var="skip" value="#{registrationModeBean.getStudentSkipsDatesByLessonType(1)}">
                                 <h:panelGrid columns="1" styleClass="w100pc">
                                     <h:outputText value="#{skip}"/>
@@ -87,7 +89,9 @@
                             </ui:repeat>
                         </p:tooltip>
 
-                        <p:tooltip for="studentPracticalSkips" position="bottom">
+                        <p:tooltip for="studentPracticalSkips" position="bottom"
+                                   rendered="#{registrationModeBean.getStudentSkipsDatesByLessonType(2).size() gt 0}">
+                            <h:outputText value="#{msg['practical']}"/>
                             <ui:repeat var="skip" value="#{registrationModeBean.getStudentSkipsDatesByLessonType(2)}">
                                 <h:panelGrid columns="1" styleClass="w100pc">
                                     <h:outputText value="#{skip}"/>
@@ -95,7 +99,9 @@
                             </ui:repeat>
                         </p:tooltip>
 
-                        <p:tooltip for="studentLabSkips" position="bottom">
+                        <p:tooltip for="studentLabSkips" position="bottom"
+                                   rendered="#{registrationModeBean.getStudentSkipsDatesByLessonType(3).size()  gt 0}">
+                            <h:outputText value="#{msg['lab']}"/>
                             <ui:repeat var="skip" value="#{registrationModeBean.getStudentSkipsDatesByLessonType(3)}">
                                 <h:panelGrid columns="1" styleClass="w100pc">
                                     <h:outputText value="#{skip}"/>

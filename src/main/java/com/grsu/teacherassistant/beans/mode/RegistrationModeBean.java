@@ -165,21 +165,6 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
             List<String> skips = new ArrayList<>();
             SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
 
-            switch(LessonType.getLessonTypeByCode(lessonTypeCode)){
-                case LECTURE: {
-                    skips.add(localeUtils.getMessage("lecture"));
-                    break;
-                }
-                case PRACTICAL: {
-                    skips.add(localeUtils.getMessage("practical"));
-                    break;
-                }
-                case LAB: {
-                    skips.add(localeUtils.getMessage("lab"));
-                    break;
-                }
-            }
-
             for (Date processedStudentSkipsDate : processedStudentSkipsDates) {
                 skips.add(formatter.format(processedStudentSkipsDate));
             }
