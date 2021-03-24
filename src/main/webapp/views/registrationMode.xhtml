@@ -226,6 +226,8 @@
                                           )}"
                                          rendered="#{registrationModeBean.nextLessonAvailable}"/>
                     </p:panel>
+
+                    <!--added absent students percent instead of progressbar-->
                     <p:panelGrid columns="2" styleClass="lesson-text left">
                         <p:panelGrid columns="2" id="attendanceInfo" styleClass="bold">
                             <h:outputText value="#{msg['lesson.students.all']}"/>
@@ -236,10 +238,7 @@
                                 value="#{registrationModeBean.presentStudents.size() - registrationModeBean.additionalStudents.size()}"/>
 
                             <h:outputText value="#{msg['lesson.students.absent']}"/>
-
-                            <!--added absent students percent instead of progressbar-->
-                            <h:outputText id="registrationProgress" value="#{registrationModeBean.absentStudents.size()}/
-                            #{registrationModeBean.getAbsentStudentsPercent()}%"/>
+                            <h:outputText id="registrationProgress" value="#{registrationModeBean.absentStudents.size()}/#{registrationModeBean.getAbsentStudentsPercent()}%"/>
 
                             <h:commandButton rendered="#{registrationModeBean.additionalStudents.size() gt 0}"
                                       actionListener="#{registrationModeBean.showAdditionalStudents()}"
