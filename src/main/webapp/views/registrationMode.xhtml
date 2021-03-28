@@ -45,26 +45,26 @@
                                           rendered="#{not registrationModeBean.studentNotExist}"/>
                         </h:outputLink>-->
 
-                        <h:outputLink id="studentTotalSkips" value="#" style="text-decoration: none" >
+                        <h:outputLink id="studentTotalSkips" value="#" style="text-decoration: none">
                             <h:outputText styleClass="lowercase dark-red" escape="false"
                                           value="#{registrationModeBean.getTotalStudentSkips(registrationModeBean.processedStudent)}"
                                           rendered="#{not registrationModeBean.studentNotExist}"/>
                         </h:outputLink>
 
                         <!--Student skips info-->
-                        <h:outputLink id="studentLectureSkips" value="#" style="text-decoration: none" >
+                        <h:outputLink id="studentLectureSkips" value="#" style="text-decoration: none">
                             <h:outputText styleClass="lowercase dark-red" escape="false"
                                           value="#{registrationModeBean.getStudentSkipsByLessonType(registrationModeBean.processedStudent, 1)}"
                                           rendered="#{not registrationModeBean.studentNotExist}"/>
                         </h:outputLink>
                         <h:outputText value="/" styleClass="lowercase dark-red" escape="false"/>
-                        <h:outputLink id="studentPracticalSkips" value="#" style="text-decoration: none" >
+                        <h:outputLink id="studentPracticalSkips" value="#" style="text-decoration: none">
                             <h:outputText styleClass="lowercase dark-red" escape="false"
                                           value="#{registrationModeBean.getStudentSkipsByLessonType(registrationModeBean.processedStudent, 2)}"
                                           rendered="#{not registrationModeBean.studentNotExist}"/>
                         </h:outputLink>
                         <h:outputText value="/" styleClass="lowercase dark-red" escape="false"/>
-                        <h:outputLink id="studentLabSkips" value="#" style="text-decoration: none" >
+                        <h:outputLink id="studentLabSkips" value="#" style="text-decoration: none">
                             <h:outputText styleClass="lowercase dark-red" escape="false"
                                           value="#{registrationModeBean.getStudentSkipsByLessonType(registrationModeBean.processedStudent, 3)}"
                                           rendered="#{not registrationModeBean.studentNotExist}"/>
@@ -80,7 +80,7 @@
                         </p:tooltip>
 
                         <p:tooltip for="studentLectureSkips" position="bottom"
-                                rendered="#{registrationModeBean.getStudentSkipsDatesByLessonType(1).size() gt 0}">
+                                   rendered="#{registrationModeBean.getStudentSkipsDatesByLessonType(1).size() gt 0}">
                             <h:outputText value="#{msg['lecture']}"/>
                             <ui:repeat var="skip" value="#{registrationModeBean.getStudentSkipsDatesByLessonType(1)}">
                                 <h:panelGrid columns="1" styleClass="w100pc">
@@ -90,7 +90,7 @@
                         </p:tooltip>
 
                         <p:tooltip for="studentPracticalSkips" position="bottom"
-                                   rendered="#{registrationModeBean.getStudentSkipsDatesByLessonType(2).size() gt 0}">
+                                   rendered="#{registrationModeBean.getAdditionLessonInfosDatesByLessonType(2).size() gt 0}">
                             <h:outputText value="#{msg['practical']}"/>
                             <ui:repeat var="skip" value="#{registrationModeBean.getStudentSkipsDatesByLessonType(2)}">
                                 <h:panelGrid columns="1" styleClass="w100pc">
@@ -110,9 +110,9 @@
                         </p:tooltip>
 
 
-                        <h:outputText styleClass="lowercase red" escape="false"
-                                       value="#{registrationModeBean.getAdditionLessonInfo(registrationModeBean.processedStudent)}"
-                                       rendered="#{not registrationModeBean.studentNotExist}"/>
+                       <!-- <h:outputText styleClass="lowercase red" escape="false"
+                                      value="#{registrationModeBean.getAdditionLessonInfo(registrationModeBean.processedStudent)}"
+                                      rendered="#{not registrationModeBean.studentNotExist}"/>-->
                         <p:outputLabel value="#{msg['label.reRegistration']}"
                                        styleClass="font-size-12pt blue margin-top-20px"
                                        rendered="#{registrationModeBean.reRegistration}"/>
@@ -244,13 +244,24 @@
                                 value="#{registrationModeBean.presentStudents.size() - registrationModeBean.additionalStudents.size()}"/>
 
                             <h:outputText value="#{msg['lesson.students.absent']}"/>
-                            <h:outputText id="registrationProgress" value="#{registrationModeBean.absentStudents.size()}/#{registrationModeBean.getAbsentStudentsPercent()}%"/>
+                            <h:outputText id="registrationProgress"
+                                          value="#{registrationModeBean.absentStudents.size()}/#{registrationModeBean.getAbsentStudentsPercent()}%"/>
 
-                            <h:commandButton rendered="#{registrationModeBean.additionalStudents.size() gt 0}"
-                                      actionListener="#{registrationModeBean.showAdditionalStudents()}"
+                            <h:outputText id="additionalStudents"
+                                          rendered="#{registrationModeBean.additionalStudents.size() gt 0}"
+                                          actionListener="#{registrationModeBean.showAdditionalStudents()}"
                                           value="#{msg['lesson.students.additional']}"/>
                             <h:outputText rendered="#{registrationModeBean.additionalStudents.size() gt 0}"
                                           value="#{registrationModeBean.additionalStudents.size()}"/>
+
+                            <p:tooltip for="additionalStudents" position="bottom">
+                                <ui:repeat var="additionalStudent" value="#{registrationModeBean.additionalStudents}">
+                                    <h:panelGrid columns="1" styleClass="w100pc">
+                                        <h:outputText value="#{additionalStudent.firstName.concat(' ')} #{additionalStudent.lastName}"/>
+                                    </h:panelGrid>
+                                </ui:repeat>
+                            </p:tooltip>
+
                         </p:panelGrid>
                         <p:panel>
                             <p:outputLabel value="#{registrationModeBean.selectedLesson.stream.name}"/>
@@ -639,9 +650,10 @@
                     </h:panelGrid>
                 </ui:repeat>
                 <p:separator/>
-                <p:commandButton actionListener="#{registrationModeBean.initLesson(registrationModeBean.lastLecture, propertiesBean.isLastLessonNotesLoadingEnabled)}"
-                                 update=":lessonForm"
-                                 value="#{msg['lecture']}" rendered="#{registrationModeBean.lastLecture != null}"/>
+                <p:commandButton
+                    actionListener="#{registrationModeBean.initLesson(registrationModeBean.lastLecture, propertiesBean.isLastLessonNotesLoadingEnabled)}"
+                    update=":lessonForm"
+                    value="#{msg['lecture']}" rendered="#{registrationModeBean.lastLecture != null}"/>
                 <ui:repeat var="note"
                            value="#{registrationModeBean.lastLecture.notes}">
                     <h:panelGrid columns="3" columnClasses="w300px, w20px">
@@ -650,9 +662,10 @@
                     </h:panelGrid>
                 </ui:repeat>
                 <p:separator/>
-                <p:commandButton actionListener="#{registrationModeBean.initLesson(registrationModeBean.lastPractice, propertiesBean.isLastLessonNotesLoadingEnabled)}"
-                                 update=":lessonForm"
-                                 value="#{msg['practical']}" rendered="#{registrationModeBean.lastPractice != null}"/>
+                <p:commandButton
+                    actionListener="#{registrationModeBean.initLesson(registrationModeBean.lastPractice, propertiesBean.isLastLessonNotesLoadingEnabled)}"
+                    update=":lessonForm"
+                    value="#{msg['practical']}" rendered="#{registrationModeBean.lastPractice != null}"/>
                 <ui:repeat var="note"
                            value="#{registrationModeBean.lastPractice.notes}">
                     <h:panelGrid columns="3" columnClasses="w300px, w20px">

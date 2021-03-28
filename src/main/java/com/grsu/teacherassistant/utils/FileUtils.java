@@ -11,15 +11,13 @@ import static com.grsu.teacherassistant.utils.PropertyUtils.getProperty;
 public class FileUtils {
     public static final String separator = File.separator;
     public static final String STUDENTS_PHOTO_EXTENSION = ".jpg";
-    private static final String TOMCAT_PATH = System.getProperty("catalina.base");
+    private static final String TOMCAT_PATH = System.getProperty("catalina.home");
     private static final String APP_FILES_DIR_NAME = "app_files";
-  //  public static final String APP_FILES_PATH = buildPath(TOMCAT_PATH, APP_FILES_DIR_NAME);
-    public static final String APP_FILES_PATH = "C:\\Users\\2018\\Downloads\\apache-tomcat-9.0.31\\app_files";
+    public static final String APP_FILES_PATH = buildPath(TOMCAT_PATH, APP_FILES_DIR_NAME);
     private static final String WEBAPPS_DIR_NAME = "webapps";
     public static final String WEBAPPS_FILES_PATH = buildPath(TOMCAT_PATH, WEBAPPS_DIR_NAME);
     private static final ClassLoader classLoader = FileUtils.class.getClassLoader();
-//    public static final String CONFIG_FILE_PATH = buildPath(APP_FILES_PATH, "config", "config.properties");
-    public static final String CONFIG_FILE_PATH = "C:\\Users\\2018\\Downloads\\apache-tomcat-9.0.31\\app_files\\config\\config.properties";
+    public static final String CONFIG_FILE_PATH = buildPath(APP_FILES_PATH, "config", "config.properties");
     public static final String CSV_FOLDER_PATH = buildPath(APP_FILES_PATH, "csv");
     public static final String CSV_EXTENSION = ".csv";
     public static final String DATABASE_PATH = buildPath(APP_FILES_PATH, "database", getProperty("db.name"));
@@ -34,6 +32,7 @@ public class FileUtils {
      */
     public static String buildPath(boolean separatorPrefix, boolean separatorPostfix, String... args) {
         StringBuilder sb = new StringBuilder();
+        String TOMCAT_PATH = System.getProperty("catalina.base");
         if (separatorPrefix) {
             sb.append(separator);
         }

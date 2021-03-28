@@ -77,13 +77,13 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
     //private List<StudentLesson> processedStudentSkips;
 
     private List<Student> presentStudents;
-    private List<Student> absentStudents;
+    private List<Student> absentStudents = new ArrayList<>();
     private List<Student> additionalStudents;
 
     private List<Student> allStudents;
     private List<Student> filteredAllStudents;
 
-    private Set<Student> lessonStudents;
+    private Set<Student> lessonStudents = new HashSet<>();
 
 
     private List<LessonStudentModel> lessonPresentStudents;
@@ -124,7 +124,7 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
     private Lesson lastPractice;
 
     //gets list of students skips dates and lessons and formats for ui
-    public List<String> getStudentSkips(){
+    public List<String> getStudentSkips() {
         LocaleUtils localeUtils = new LocaleUtils(localeBean.getLocale());
         StudentSkips processedStudentSkips = StudentDAO.getStudentSkipsDates(processedStudent.getId(), selectedLesson.getId());
         List<String> skips = new ArrayList<>();
@@ -132,12 +132,12 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
         List<LessonType> lessonTypes = processedStudentSkips.getLessonType();
         SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
 
-        for(int i=0; i < skipsDates.size(); i++){
+        for (int i = 0; i < skipsDates.size(); i++) {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append(formatter.format(skipsDates.get(i)));
             stringBuilder.append(" ");
 
-            switch(lessonTypes.get(i)){
+            switch (lessonTypes.get(i)) {
                 case LECTURE: {
                     stringBuilder.append(localeUtils.getMessage("lecture"));
                     break;
@@ -157,11 +157,11 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
         return skips;
     }
 
-    public List<String> getStudentSkipsDatesByLessonType(int lessonTypeCode){
+    public List<String> getStudentSkipsDatesByLessonType(int lessonTypeCode) {
         LocaleUtils localeUtils = new LocaleUtils(localeBean.getLocale());
         List<Date> processedStudentSkipsDates = StudentDAO.getStudentSkipsByLessonType(processedStudent.getId(), lessonTypeCode, selectedLesson.getId());
 
-        if(processedStudentSkipsDates.size() > 0) {
+        if (processedStudentSkipsDates.size() > 0) {
             List<String> skips = new ArrayList<>();
             SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
 
@@ -177,7 +177,10 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
 
 
     public int getAbsentStudentsPercent(){
-        return (int)Math.round(1.0 * absentStudents.size() / lessonStudents.size() * 100);
+        if (lessonStudents.size() != 0) {
+            return (int) Math.round(1.0 * absentStudents.size() / lessonStudents.size() * 100);
+        }
+        return 0;
     }
 
     public void initLesson(Lesson lesson, boolean forceLoading) {
@@ -683,7 +686,7 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
         }
     }
 
-    public String getTotalStudentSkips(Student student){
+    public String getTotalStudentSkips(Student student) {
         LocaleUtils localeUtils = new LocaleUtils(localeBean.getLocale());
         Map<String, Integer> studentSkipInfoMap = skipInfo.get(student.getId());
         if (studentSkipInfoMap != null) {
@@ -694,10 +697,13 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
         return localeUtils.getMessage("lesson.visit.noSkip");
     }
 
-    public int getStudentSkipsByLessonType(Student student, int lessonTypeCode){
+    public int getStudentSkipsByLessonType(Student student, int lessonTypeCode) {
         Map<String, Integer> studentSkipInfoMap = skipInfo.get(student.getId());
-        Integer skipsAmount = studentSkipInfoMap.get(LessonType.getLessonTypeByCode(lessonTypeCode).getKey());
-        return skipsAmount == null ? 0 : skipsAmount;
+        if (studentSkipInfoMap != null && LessonType.getLessonTypeByCode(lessonTypeCode) != null) {
+            Integer skipsAmount = studentSkipInfoMap.get(LessonType.getLessonTypeByCode(lessonTypeCode).getKey());
+            return skipsAmount == null ? 0 : skipsAmount;
+        }
+         return 0;
     }
 
     public String getStudentSkip(Student student) {
