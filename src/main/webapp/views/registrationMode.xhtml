@@ -90,7 +90,7 @@
                         </p:tooltip>
 
                         <p:tooltip for="studentPracticalSkips" position="bottom"
-                                   rendered="#{registrationModeBean.getAdditionLessonInfosDatesByLessonType(2).size() gt 0}">
+                                   rendered="#{registrationModeBean.getStudentSkipsDatesByLessonType(2).size() gt 0}">
                             <h:outputText value="#{msg['practical']}"/>
                             <ui:repeat var="skip" value="#{registrationModeBean.getStudentSkipsDatesByLessonType(2)}">
                                 <h:panelGrid columns="1" styleClass="w100pc">
