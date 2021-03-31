@@ -243,9 +243,11 @@
                             <h:outputText
                                 value="#{registrationModeBean.presentStudents.size() - registrationModeBean.additionalStudents.size()}"/>
 
-                            <h:outputText value="#{msg['lesson.students.absent']}"/>
+                            <h:outputText value="#{msg['lesson.students.absent']}" style="color: blue; font-weight: bold"/>
                             <h:outputText id="registrationProgress"
-                                          value="#{registrationModeBean.absentStudents.size()}/#{registrationModeBean.getAbsentStudentsPercent()}%"/>
+                                value="&lt;span style = &#34;color: blue; font-weight: bold&#34; &gt;#{registrationModeBean.absentStudents.size()}&lt;/span&gt;
+                                &lt;span style = &#34;font-weight: normal&#34; &gt;/#{registrationModeBean.getAbsentStudentsPercent()}%&lt;/span&gt;"
+                                          escape="false" />
 
                             <h:outputText id="additionalStudents"
                                           rendered="#{registrationModeBean.additionalStudents.size() gt 0}"
