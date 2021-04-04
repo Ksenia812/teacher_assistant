@@ -8,6 +8,7 @@ import com.grsu.teacherassistant.dao.EntityDAO;
 import com.grsu.teacherassistant.dao.GroupDAO;
 import com.grsu.teacherassistant.dao.LessonDAO;
 import com.grsu.teacherassistant.dao.StudentDAO;
+import com.grsu.teacherassistant.dao.StudentLessonDAO;
 import com.grsu.teacherassistant.entities.*;
 import com.grsu.teacherassistant.models.*;
 import com.grsu.teacherassistant.push.resources.PushMessage;
@@ -725,7 +726,7 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
     }
 
     public String getAdditionLessonInfo(Student student) {
-        Group group = selectedLesson.getGroup();
+        /*Group group = selectedLesson.getGroup();
         Map<Integer, StudentLesson> allStudentLessonsMap = student.getStudentLessons();
         if (allStudentLessonsMap == null) {
             return "";
@@ -784,8 +785,9 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
         long additionalLessonsCount = allStudentLessons.stream()
             .filter(sl -> studentLessons.stream()
                 .noneMatch(studentLesson -> studentLesson.getId().equals(sl.getId()))
-            ).count();
-        String additionalLessonCountInfo = additionalLessonsCount == 0 ? "" : String.format(" +%d", additionalLessonsCount);
+            ).count();*/
+        int studentAdditionalLessonsAmount = StudentLessonDAO.getStudentAdditionalLessonsAmount(student.getId());
+        String additionalLessonCountInfo = studentAdditionalLessonsAmount == 0 ? "" : String.format(" +%d", studentAdditionalLessonsAmount);
         return additionalLessonCountInfo;
     }
 

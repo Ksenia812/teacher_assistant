@@ -12,6 +12,17 @@ import java.util.List;
 /**
  * @author Pavel Zaychick
  */
+@NamedNativeQueries({
+    @NamedNativeQuery(
+        name = "StudentAdditionalLessons",
+        query = "select count(*) from STUDENT_LESSON sl\n" +
+        "join STUDENT s on sl.student_id = s.id\n" +
+        "join STUDENT_GROUP sg on s.id = sg.student_id\n" +
+        "join LESSON l on sl.lesson_id = l.id\n" +
+        "where sl.student_id = :studentId\n" +
+        "and sl.registered = true\n" +
+        "and l.group_id <> sg.group_id")
+})
 @Entity
 @Table(name = "STUDENT_LESSON")
 @Getter
@@ -59,6 +70,10 @@ public class StudentLesson implements AssistantEntity {
     @JoinColumn(name = "entity_id", referencedColumnName = "id")
     @Where(clause = "type = 'STUDENT_LESSON'")
     private List<Note> notes;
+
+    public List<Note> getNotes() {
+        return notes;
+    }
 
     public boolean isRegistered() {
         return Boolean.TRUE.equals(registered);
