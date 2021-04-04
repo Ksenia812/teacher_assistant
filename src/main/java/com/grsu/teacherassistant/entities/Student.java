@@ -1,5 +1,6 @@
 package com.grsu.teacherassistant.entities;
 
+import com.grsu.teacherassistant.models.AdditionalLessonsInfo;
 import com.grsu.teacherassistant.models.SkipInfo;
 import com.grsu.teacherassistant.models.StudentSkips;
 import lombok.Getter;
@@ -42,7 +43,18 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
                     @ColumnResult(name = "lessonType", type = Integer.class)
                 }
             )
-        })
+        }),
+        @SqlResultSetMapping(
+            name = "StudentAdditionalLessonsInfoMapping",
+            classes = {
+                @ConstructorResult(
+                    targetClass = AdditionalLessonsInfo.class,
+                    columns = {
+                        @ColumnResult(name = "lessonType", type = String.class),
+                        @ColumnResult(name = "lessonDate", type = java.sql.Date.class)
+                    }
+                )
+            })
 })
 @NamedNativeQueries({
     @NamedNativeQuery(

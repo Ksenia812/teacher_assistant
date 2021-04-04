@@ -72,6 +72,7 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
     private NotificationSettingsBean notificationSettingsBean;
 
     private Lesson initialData;
+    private int totalSkips;
     private List<Lesson> orderedLessons;
     private Lesson selectedLesson;
     private Student processedStudent;
@@ -692,10 +693,22 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
         Map<String, Integer> studentSkipInfoMap = skipInfo.get(student.getId());
         if (studentSkipInfoMap != null) {
             Integer skipsAmount = studentSkipInfoMap.get(Constants.TOTAL_SKIP);
-
-            return localeUtils.getMessage("label.skips") + ": " + skipsAmount + "&nbsp;&nbsp;&nbsp;";
+            this.totalSkips = skipsAmount;
+            return skipsAmount + "&nbsp;&nbsp;&nbsp;";
         }
         return localeUtils.getMessage("lesson.visit.noSkip");
+    }
+
+    public int getTotalStudentSkipsAmount(Student student) {
+        Map<String, Integer> studentSkipInfoMap = skipInfo.get(student.getId());
+        if (studentSkipInfoMap != null) {
+            return studentSkipInfoMap.get(Constants.TOTAL_SKIP);
+        }
+        return 0;
+    }
+
+    public String getTotalSkipsAdditionalLessons(Student student) {
+        return String.valueOf(getTotalStudentSkipsAmount(student) - getStudentAdditionalLessons(student).size());
     }
 
     public int getStudentSkipsByLessonType(Student student, int lessonTypeCode) {
@@ -726,69 +739,14 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
     }
 
     public String getAdditionLessonInfo(Student student) {
-        /*Group group = selectedLesson.getGroup();
-        Map<Integer, StudentLesson> allStudentLessonsMap = student.getStudentLessons();
-        if (allStudentLessonsMap == null) {
-            return "";
-        }
-        Discipline currentDiscipline = selectedLesson.getStream().getDiscipline();
-        if (currentDiscipline == null) {
-            return "";
-        }
-        List<StudentLesson> allStudentLessons = new ArrayList<>(allStudentLessonsMap.values());
-        java.util.stream.Stream<Lesson> lessonStream;
-        if (group == null) {
-            Stream stream = selectedLesson.getStream();
-            if (stream == null) {
-                return "";
-            }
-            List<Lesson> lessons = stream.getLessons();
-            if (lessons == null) {
-                return "";
-            }
-            lessonStream = lessons.stream();
-        } else {
-            List<Lesson> lessons = group.getLessons();
-            if (lessons == null) {
-                return "";
-            }
-            lessonStream = lessons.stream();
-        }
-        List<StudentLesson> studentLessons = lessonStream
-            .flatMap(lesson -> {
-                    Map<Integer, StudentLesson> stLess = lesson.getStudentLessons();
-                    if (stLess == null) {
-                        return java.util.stream.Stream.empty();
-                    }
-                    return stLess
-                        .values()
-                        .stream()
-                        .filter(studentLesson -> {
-                            Lesson ls = studentLesson.getLesson();
-                            if (ls == null) {
-                                return false;
-                            }
-                            Stream stream = ls.getStream();
-                            if (stream == null) {
-                                return false;
-                            }
-                            Discipline discipline = stream.getDiscipline();
-                            if (discipline == null) {
-                                return false;
-                            }
-                            return studentLesson.getStudentId().equals(student.getId())
-                                && discipline.getId().equals(currentDiscipline.getId());
-                        });
-                }
-            )
-            .collect(Collectors.toList());
-        long additionalLessonsCount = allStudentLessons.stream()
-            .filter(sl -> studentLessons.stream()
-                .noneMatch(studentLesson -> studentLesson.getId().equals(sl.getId()))
-            ).count();*/
         int studentAdditionalLessonsAmount = StudentLessonDAO.getStudentAdditionalLessonsAmount(student.getId());
         String additionalLessonCountInfo = studentAdditionalLessonsAmount == 0 ? "" : String.format(" +%d", studentAdditionalLessonsAmount);
         return additionalLessonCountInfo;
+    }
+
+    public List<String> getStudentAdditionalLessons(Student student) {
+        List<String> studentAdditionalLessonsInfo = StudentLessonDAO.getStudentAdditionalLessonsInfo(student.getId());
+        return studentAdditionalLessonsInfo;
     }
 
     public void onStudentRowSelect(SelectEvent event) {

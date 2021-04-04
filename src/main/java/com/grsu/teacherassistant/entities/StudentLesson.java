@@ -1,6 +1,7 @@
 package com.grsu.teacherassistant.entities;
 
 import com.grsu.teacherassistant.converters.db.LocalTimeAttributeConverter;
+import com.grsu.teacherassistant.models.AdditionalLessonsInfo;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Where;
@@ -16,12 +17,24 @@ import java.util.List;
     @NamedNativeQuery(
         name = "StudentAdditionalLessons",
         query = "select count(*) from STUDENT_LESSON sl\n" +
-        "join STUDENT s on sl.student_id = s.id\n" +
-        "join STUDENT_GROUP sg on s.id = sg.student_id\n" +
-        "join LESSON l on sl.lesson_id = l.id\n" +
-        "where sl.student_id = :studentId\n" +
-        "and sl.registered = true\n" +
-        "and l.group_id <> sg.group_id")
+            "join STUDENT s on sl.student_id = s.id\n" +
+            "join STUDENT_GROUP sg on s.id = sg.student_id\n" +
+            "join LESSON l on sl.lesson_id = l.id\n" +
+            "where sl.student_id = :studentId\n" +
+            "and sl.registered = 1\n" +
+            "and l.group_id <> sg.group_id"),
+    @NamedNativeQuery(
+        name = "StudentAdditionalLessonsInfo",
+        query = "select lt.name as lessonType, l.DATE as lessonDate\n" +
+            "from STUDENT_LESSON sl\n" +
+            "         join STUDENT s on sl.student_id = s.id\n" +
+            "         join STUDENT_GROUP sg on s.id = sg.student_id\n" +
+            "         join LESSON l on sl.lesson_id = l.id\n" +
+            "        join LESSON_TYPE lt on l.type_id = lt.id\n" +
+            "where sl.student_id =:studentId\n" +
+            "  and sl.registered = 1\n" +
+            "  and l.group_id <> sg.group_id"
+    )
 })
 @Entity
 @Table(name = "STUDENT_LESSON")

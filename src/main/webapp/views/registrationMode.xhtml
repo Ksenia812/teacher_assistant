@@ -46,7 +46,11 @@
                         </h:outputLink>-->
 
                         <h:outputLink id="studentTotalSkips" value="#" style="text-decoration: none">
-                            <h:outputText styleClass="lowercase dark-red" escape="false"
+                            <h:outputText value="#{msg['label.skips']}: "/>
+                            <h:outputText styleClass="lowercase red" escape="false"
+                                          value="#{registrationModeBean.getTotalSkipsAdditionalLessons(registrationModeBean.processedStudent)} "
+                                          rendered="#{not registrationModeBean.studentNotExist}"/>
+                            <h:outputText styleClass="lowercase blue" escape="false"
                                           value="#{registrationModeBean.getTotalStudentSkips(registrationModeBean.processedStudent)}"
                                           rendered="#{not registrationModeBean.studentNotExist}"/>
                         </h:outputLink>
@@ -110,9 +114,18 @@
                         </p:tooltip>
 
 
-                        <h:outputText styleClass="lowercase red" escape="false"
+                        <h:outputText id="studentAdditionalLessons" styleClass="lowercase red" escape="false"
                                       value="#{registrationModeBean.getAdditionLessonInfo(registrationModeBean.processedStudent)}"
                                       rendered="#{not registrationModeBean.studentNotExist}"/>
+
+                        <p:tooltip for="studentAdditionalLessons" position="bottom"
+                                   rendered="#{registrationModeBean.getStudentAdditionalLessons(registrationModeBean.processedStudent).size()  gt 0}">
+                            <ui:repeat var="additionalLesson" value="#{registrationModeBean.getStudentAdditionalLessons(registrationModeBean.processedStudent)}">
+                                <h:panelGrid columns="1" styleClass="w100pc">
+                                    <h:outputText value="#{additionalLesson}"/>
+                                </h:panelGrid>
+                            </ui:repeat>
+                        </p:tooltip>
                         <p:outputLabel value="#{msg['label.reRegistration']}"
                                        styleClass="font-size-12pt blue margin-top-20px"
                                        rendered="#{registrationModeBean.reRegistration}"/>
