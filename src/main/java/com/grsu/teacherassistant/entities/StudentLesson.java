@@ -1,7 +1,6 @@
 package com.grsu.teacherassistant.entities;
 
 import com.grsu.teacherassistant.converters.db.LocalTimeAttributeConverter;
-import com.grsu.teacherassistant.models.AdditionalLessonsInfo;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Where;

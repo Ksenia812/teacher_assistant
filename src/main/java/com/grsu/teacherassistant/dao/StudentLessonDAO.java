@@ -1,8 +1,5 @@
 package com.grsu.teacherassistant.dao;
 
-import com.grsu.teacherassistant.entities.StudentLesson;
-import com.grsu.teacherassistant.models.AdditionalLessonsInfo;
-import com.grsu.teacherassistant.models.SkipInfo;
 import com.grsu.teacherassistant.utils.db.DBSessionFactory;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
