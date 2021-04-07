@@ -5,10 +5,8 @@ import com.grsu.teacherassistant.beans.NotificationSettingsBean;
 import com.grsu.teacherassistant.beans.utility.*;
 import com.grsu.teacherassistant.constants.Constants;
 import com.grsu.teacherassistant.dao.EntityDAO;
-import com.grsu.teacherassistant.dao.GroupDAO;
 import com.grsu.teacherassistant.dao.LessonDAO;
 import com.grsu.teacherassistant.dao.StudentDAO;
-import com.grsu.teacherassistant.dao.StudentLessonDAO;
 import com.grsu.teacherassistant.entities.*;
 import com.grsu.teacherassistant.models.*;
 import com.grsu.teacherassistant.push.resources.PushMessage;
@@ -21,7 +19,6 @@ import org.primefaces.component.api.DynamicColumn;
 import org.primefaces.event.CellEditEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.ToggleSelectEvent;
-import org.primefaces.model.DualListModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -126,41 +123,72 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
     private Lesson lastPractice;
 
     //gets list of students skips dates and lessons and formats for ui
-    public List<String> getStudentSkips() {
-        LocaleUtils localeUtils = new LocaleUtils(localeBean.getLocale());
-        StudentSkips processedStudentSkips = StudentDAO.getStudentSkipsDates(processedStudent.getId(), selectedLesson.getId());
+    public List<String> getStudentTotalSkips() {
+        List<StudentSkip> processedStudentSkips = StudentDAO.getStudentSkipsDates(processedStudent.getId(), selectedLesson.getId());
         List<String> skips = new ArrayList<>();
-        List<Date> skipsDates = processedStudentSkips.getSkipDate();
-        List<LessonType> lessonTypes = processedStudentSkips.getLessonType();
         SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
 
-        for (int i = 0; i < skipsDates.size(); i++) {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append(formatter.format(skipsDates.get(i)));
-            stringBuilder.append(" ");
+        for (StudentSkip skip : processedStudentSkips) {
+            String date = formatter.format(skip.getSkipDate());
+            String lessonType = convertLessonType(skip.getLessonType());
 
-            switch (lessonTypes.get(i)) {
-                case LECTURE: {
-                    stringBuilder.append(localeUtils.getMessage("lecture"));
-                    break;
-                }
-                case PRACTICAL: {
-                    stringBuilder.append(localeUtils.getMessage("practical"));
-                    break;
-                }
-                case LAB: {
-                    stringBuilder.append(localeUtils.getMessage("lab"));
-                    break;
-                }
-            }
-            skips.add(stringBuilder.toString());
+            skips.add(String.format("%s %s", date, lessonType));
         }
 
         return skips;
     }
 
+    public List<String> getStudentTotalSkipsWithAdditionalLessons() {
+        List<StudentSkip> processedStudentSkips = StudentDAO.getStudentSkipsDates(processedStudent.getId(), selectedLesson.getId());
+        List<AdditionalLesson> processedStudentAdditionalLessons = StudentDAO.getStudentAdditionalLessonsInfo(processedStudent.getId());
+
+        long additionalLectures = processedStudentAdditionalLessons.stream()
+            .filter(s -> s.getLessonType().equals(LessonType.LECTURE))
+            .count();
+
+        long additionalPracticals = processedStudentAdditionalLessons.stream()
+            .filter(s -> s.getLessonType().equals(LessonType.PRACTICAL))
+            .count();
+
+        long additionalLabs = processedStudentAdditionalLessons.stream()
+            .filter(s -> s.getLessonType().equals(LessonType.LAB))
+            .count();
+
+        List<StudentSkip> lectureSkips = processedStudentSkips.stream()
+            .filter(s -> s.getLessonType().equals(LessonType.LECTURE))
+            .collect(Collectors.toList());
+
+        List<StudentSkip> practicalSkips = processedStudentSkips.stream()
+            .filter(s -> s.getLessonType().equals(LessonType.PRACTICAL))
+            .collect(Collectors.toList());
+
+        List<StudentSkip> labSkips = processedStudentSkips.stream()
+            .filter(s -> s.getLessonType().equals(LessonType.LAB))
+            .collect(Collectors.toList());
+
+        lectureSkips = (List<StudentSkip>) removeElements(lectureSkips, additionalLectures);
+        practicalSkips = (List<StudentSkip>) removeElements(practicalSkips, additionalPracticals);
+        labSkips = (List<StudentSkip>) removeElements(labSkips, additionalLabs);
+
+        processedStudentSkips = new ArrayList<>();
+        processedStudentSkips.addAll(lectureSkips);
+        processedStudentSkips.addAll(practicalSkips);
+        processedStudentSkips.addAll(labSkips);
+
+        List<String> skips = new ArrayList<>();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
+        for (StudentSkip skip : processedStudentSkips) {
+            String date = formatter.format(skip.getSkipDate());
+            String lessonType = convertLessonType(skip.getLessonType());
+
+            skips.add(String.format("%s %s", date, lessonType));
+        }
+
+
+        return skips;
+    }
+
     public List<String> getStudentSkipsDatesByLessonType(int lessonTypeCode) {
-        LocaleUtils localeUtils = new LocaleUtils(localeBean.getLocale());
         List<Date> processedStudentSkipsDates = StudentDAO.getStudentSkipsByLessonType(processedStudent.getId(), lessonTypeCode, selectedLesson.getId());
 
         if (processedStudentSkipsDates.size() > 0) {
@@ -178,7 +206,7 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
     }
 
 
-    public int getAbsentStudentsPercent(){
+    public int getAbsentStudentsPercent() {
         if (lessonStudents.size() != 0) {
             return (int) Math.round(1.0 * absentStudents.size() / lessonStudents.size() * 100);
         }
@@ -717,7 +745,7 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
             Integer skipsAmount = studentSkipInfoMap.get(LessonType.getLessonTypeByCode(lessonTypeCode).getKey());
             return skipsAmount == null ? 0 : skipsAmount;
         }
-         return 0;
+        return 0;
     }
 
     public String getStudentSkip(Student student) {
@@ -739,13 +767,21 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
     }
 
     public String getAdditionLessonInfo(Student student) {
-        int studentAdditionalLessonsAmount = StudentLessonDAO.getStudentAdditionalLessonsAmount(student.getId());
+        int studentAdditionalLessonsAmount = StudentDAO.getStudentAdditionalLessonsAmount(student.getId());
         String additionalLessonCountInfo = studentAdditionalLessonsAmount == 0 ? "" : String.format(" +%d", studentAdditionalLessonsAmount);
         return additionalLessonCountInfo;
     }
 
     public List<String> getStudentAdditionalLessons(Student student) {
-        List<String> studentAdditionalLessonsInfo = StudentLessonDAO.getStudentAdditionalLessonsInfo(student.getId());
+        List<AdditionalLesson> studentAdditionalLessons = StudentDAO.getStudentAdditionalLessonsInfo(student.getId());
+        List<String> studentAdditionalLessonsInfo = new ArrayList<>();
+
+        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
+        for (AdditionalLesson l : studentAdditionalLessons) {
+            studentAdditionalLessonsInfo.add(String.format("%s %s %s",
+                formatter.format(l.getDate()), convertLessonType(l.getLessonType()), l.getGroupName()));
+        }
+
         return studentAdditionalLessonsInfo;
     }
 
@@ -1015,5 +1051,33 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
         }
         newLessonNote = null;
         FacesUtils.closeDialog("lessonNotesDialog");
+    }
+
+    private String convertLessonType(LessonType lessonType) {
+        LocaleUtils localeUtils = new LocaleUtils(localeBean.getLocale());
+        switch (lessonType) {
+            case LECTURE: {
+                return localeUtils.getMessage("lecture");
+            }
+            case PRACTICAL: {
+                return localeUtils.getMessage("practical");
+            }
+            case LAB: {
+                return localeUtils.getMessage("lab");
+            }
+        }
+        return "";
+    }
+
+    private List<?> removeElements(List<?> list, long count) {
+        if (list.size() <= count) {
+            return new ArrayList<>();
+        }
+
+        for (long i = count; i > 0; i--) {
+            list.remove(0);
+        }
+
+        return list;
     }
 }
