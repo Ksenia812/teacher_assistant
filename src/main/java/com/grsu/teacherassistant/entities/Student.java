@@ -1,7 +1,7 @@
 package com.grsu.teacherassistant.entities;
 
 import com.grsu.teacherassistant.models.SkipInfo;
-import com.grsu.teacherassistant.models.StudentSkips;
+import com.grsu.teacherassistant.models.StudentSkip;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Where;
@@ -36,7 +36,7 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
         name = "SkipDate",
         classes = {
             @ConstructorResult(
-                targetClass = StudentSkips.class,
+                targetClass = StudentSkip.class,
                 columns = {
                     @ColumnResult(name = "skipDate", type = Date.class),
                     @ColumnResult(name = "lessonType", type = Integer.class)
@@ -70,19 +70,8 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
             "group by st.id, str.id, l.type_id",
         resultSetMapping = "SkipInfoMapping"),
     @NamedNativeQuery(
-        name = "StudentSkipsDatesQuery",
-        query = "select l.date\n" +
-            "from STUDENT st\n" +
-            "join STUDENT_LESSON sl on sl.student_id = st.id\n" +
-            "join LESSON l on l.id = sl.lesson_id and l.type_id in (1, 2, 3)\n" +
-            "join SCHEDULE sch on sch.id = l.schedule_id " +
-            "join STREAM str on str.id = l.stream_id\n" +
-            "where st.id in (:studentId) and (sl.registered is null or sl.registered = 0) " +
-            "and ((date(l.date) < date('now', 'localtime')) or (date(l.date) = date('now', 'localtime') and time(sch.begin) <= time('now', 'localtime')) or l.id = :lessonId)\n"),
-
-    @NamedNativeQuery(
-        name = "StudentSkipsLessonsQuery",
-        query = "select l.type_id \n" +
+        name = "StudentSkipsQuery",
+        query = "select l.date, l.type_id\n" +
             "from STUDENT st\n" +
             "join STUDENT_LESSON sl on sl.student_id = st.id\n" +
             "join LESSON l on l.id = sl.lesson_id and l.type_id in (1, 2, 3)\n" +
@@ -117,7 +106,30 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
             "\tFROM STUDENT_GROUP stg\n" +
             "\t\tJOIN STREAM_GROUP sg ON sg.group_id = stg.group_id\n" +
             "\tWHERE sg.stream_id = l.stream_id\n" +
-            "));", resultClass = Student.class)
+            "));", resultClass = Student.class
+    ),
+    @NamedNativeQuery(
+        name = "StudentAdditionalLessons",
+        query = "select count(*) from STUDENT_LESSON sl\n" +
+            "join STUDENT s on sl.student_id = s.id\n" +
+            "join STUDENT_GROUP sg on s.id = sg.student_id\n" +
+            "join LESSON l on sl.lesson_id = l.id\n" +
+            "where sl.student_id = :studentId\n" +
+            "and sl.registered = 1\n" +
+            "and l.group_id <> sg.group_id"),
+    @NamedNativeQuery(
+        name = "StudentAdditionalLessonsInfo",
+        query = "select lt.id as lessonType, l.DATE as lessonDate, g.name as groupName\n" +
+            "from STUDENT_LESSON sl\n" +
+            "join STUDENT s on sl.student_id = s.id\n" +
+            "join STUDENT_GROUP sg on s.id = sg.student_id\n" +
+            "join LESSON l on sl.lesson_id = l.id\n" +
+            "join 'GROUP' g on l.group_id = g.id\n" +
+            "join LESSON_TYPE lt on l.type_id = lt.id\n" +
+            "where sl.student_id =:studentId\n" +
+            "and sl.registered = 1\n" +
+            "and l.group_id <> sg.group_id"
+    )
 })
 @Entity
 @ManagedBean(name = "newInstanceOfStudent")

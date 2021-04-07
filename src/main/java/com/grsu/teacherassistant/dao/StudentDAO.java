@@ -2,9 +2,10 @@ package com.grsu.teacherassistant.dao;
 
 import com.grsu.teacherassistant.constants.Constants;
 import com.grsu.teacherassistant.entities.Student;
+import com.grsu.teacherassistant.models.AdditionalLesson;
 import com.grsu.teacherassistant.models.LessonType;
 import com.grsu.teacherassistant.models.SkipInfo;
-import com.grsu.teacherassistant.models.StudentSkips;
+import com.grsu.teacherassistant.models.StudentSkip;
 import com.grsu.teacherassistant.utils.db.DBSessionFactory;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -14,10 +15,7 @@ import org.slf4j.LoggerFactory;
 import javax.persistence.PersistenceException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class StudentDAO {
     private static final Logger LOGGER = LoggerFactory.getLogger(StudentDAO.class);
@@ -121,31 +119,25 @@ public class StudentDAO {
     }
 
     //gets student's skips dates and lessons
-    public static StudentSkips getStudentSkipsDates(Integer studentId, int lessonId){
+    public static List<StudentSkip> getStudentSkipsDates(Integer studentId, int lessonId){
         Session session = DBSessionFactory.getSession();
-        Query queryDates = session.createNamedQuery("StudentSkipsDatesQuery");
-        queryDates.setParameter("studentId", studentId);
-        queryDates.setParameter("lessonId", lessonId);
-        List<Date> dates = new ArrayList<>();
+        Query<Object[]> query = session.createNamedQuery("StudentSkipsQuery");
+        query.setParameter("studentId", studentId);
+        query.setParameter("lessonId", lessonId);
+
+        List<StudentSkip> studentSkips = new ArrayList<>();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        for(Object date : queryDates.list()){
+        for(Object[] result : query.getResultList()){
             try {
-                dates.add(formatter.parse((String) date));
+                Date date = formatter.parse((String) result[0]);
+                LessonType lessonType = LessonType.getLessonTypeByCode(((Integer)result[1]));
+                studentSkips.add(new StudentSkip(date, lessonType));
             } catch (ParseException e) {
-                e.printStackTrace();
+                LOGGER.error(e.getMessage(), e);
             }
         }
 
-        Query queryLessons = session.createNamedQuery("StudentSkipsLessonsQuery");
-        queryLessons.setParameter("studentId", studentId);
-        queryLessons.setParameter("lessonId", lessonId);
-
-        List<LessonType> lessonTypes = new ArrayList<>();
-        for(Object lesson : queryLessons.list()){
-            lessonTypes.add(LessonType.getLessonTypeByCode(((Integer)lesson)));
-        }
-
-        return new StudentSkips(dates, lessonTypes);
+        return studentSkips;
     }
 
     public static List<Date> getStudentSkipsByLessonType(Integer studentId, int lessonTypeCode, int lessonId){
@@ -181,5 +173,46 @@ public class StudentDAO {
             session.close();
         }
         return null;
+    }
+
+    public static int getStudentAdditionalLessonsAmount(int studentId){
+        int studentAdditionalLessonsAmount = 0;
+        Session session = DBSessionFactory.getSession();
+        try {
+            Query query = session.createNamedQuery("StudentAdditionalLessons");
+            query.setParameter("studentId", studentId);
+            studentAdditionalLessonsAmount = (int) query.getSingleResult();
+        } catch (PersistenceException e) {
+            LOGGER.error(e.getLocalizedMessage());
+        } catch (RuntimeException e) {
+            LOGGER.error(e.getMessage(), e);
+        } finally {
+            session.close();
+        }
+
+        return studentAdditionalLessonsAmount;
+    }
+
+    public static List<AdditionalLesson> getStudentAdditionalLessonsInfo(int studentId){
+        List<AdditionalLesson> additionalLessons = new ArrayList<>();
+        Session session = DBSessionFactory.getSession();
+        try {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            Query<Object[]> query = session.createNamedQuery("StudentAdditionalLessonsInfo");
+            query.setParameter("studentId", studentId);
+            for (Object[] object : query.getResultList()) {
+                Date date = formatter.parse((String)object[1]);
+                LessonType lessonType = LessonType.getLessonTypeByCode(((Integer)object[0]));
+                additionalLessons.add(new AdditionalLesson(date, lessonType, (String)object[2]));
+            }
+        } catch (PersistenceException | ParseException e) {
+            LOGGER.error(e.getLocalizedMessage());
+        } catch (RuntimeException e) {
+            LOGGER.error(e.getMessage(), e);
+        } finally {
+            session.close();
+        }
+
+        return additionalLessons;
     }
 }
