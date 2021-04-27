@@ -722,7 +722,7 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
         if (studentSkipInfoMap != null) {
             Integer skipsAmount = studentSkipInfoMap.get(Constants.TOTAL_SKIP);
             this.totalSkips = skipsAmount;
-            return skipsAmount + "&nbsp;&nbsp;&nbsp;";
+            return skipsAmount.toString();
         }
         return localeUtils.getMessage("lesson.visit.noSkip");
     }
