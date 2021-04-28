@@ -52,7 +52,7 @@
                                           rendered="#{registrationModeBean.getTotalStudentSkipsAmount(registrationModeBean.processedStudent) gt 0}">
                                 <h:outputText id="studentTotalSkipsAdditionalLessons" styleClass="lowercase red"
                                               escape="false"
-                                              value="#{registrationModeBean.АgetTotalSkipsAdditionalLessons(registrationModeBean.processedStudent)}"
+                                              value="#{registrationModeBean.getTotalSkipsAdditionalLessons(registrationModeBean.processedStudent)}"
                                               rendered="#{not registrationModeBean.studentNotExist}"/>
                                 <h:outputText value=" ("/>
                                 <h:outputText id="studentTotalSkips" styleClass="lowercase blue" escape="false"
