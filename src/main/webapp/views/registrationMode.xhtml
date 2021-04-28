@@ -210,7 +210,9 @@
                                          actionListener="#{menuBean.showMenu}"
                                          rendered="#{not menuBean.showMenu}"/>
 
-                        <p:commandButton id="modeBtn" icon="fa fa-fw fa-forward"/>
+                        <p:commandButton id="modeBtn"
+                                         title="#{msg['btn.modes']}"
+                                         icon="fa fa-fw fa-forward"/>
                         <p:overlayPanel for="modeBtn" hideEffect="fade" style="position: fixed;">
                             <p:commandButton title="#{msg['btn.studentMode']}" value="#{msg['btn.studentMode']}"
                                              update="@([id$=views])"
@@ -291,12 +293,12 @@
                                 &lt;span style = &#34;font-weight: normal&#34; &gt;/#{registrationModeBean.getAbsentStudentsPercent()}%&lt;/span&gt;"
                                           escape="false"/>
 
-                            <h:outputText id="additionalStudents"
+                            <h:outputText id="additionalStudents" styleClass="red"
                                           rendered="#{registrationModeBean.additionalStudents.size() gt 0}"
                                           actionListener="#{registrationModeBean.showAdditionalStudents()}"
                                           value="#{msg['lesson.students.additional']}"/>
                             <h:outputText rendered="#{registrationModeBean.additionalStudents.size() gt 0}"
-                                          value="#{registrationModeBean.additionalStudents.size()}" style="color: red"/>
+                                          value="#{registrationModeBean.additionalStudents.size()}" styleClass="red"/>
 
                             <p:tooltip for="additionalStudents" position="bottom">
                                 <ui:repeat var="additionalStudent" value="#{registrationModeBean.additionalStudents}">
