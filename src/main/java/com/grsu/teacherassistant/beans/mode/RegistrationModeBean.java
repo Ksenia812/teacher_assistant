@@ -735,8 +735,14 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
         return 0;
     }
 
+
     public String getTotalSkipsAdditionalLessons(Student student) {
-        return String.valueOf(getTotalStudentSkipsAmount(student) - getStudentAdditionalLessons(student).size());
+        int totalStudentSkipsAmount = getTotalStudentSkipsAmount(student);
+        int studentAdditionalLessons = getStudentAdditionalLessons(student).size();
+        if (studentAdditionalLessons > totalStudentSkipsAmount) {
+            return "0";
+        }
+            return String.valueOf(getTotalStudentSkipsAmount(student) - getStudentAdditionalLessons(student).size());
     }
 
     public int getStudentSkipsByLessonType(Student student, int lessonTypeCode) {
