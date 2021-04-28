@@ -58,6 +58,8 @@ body {
 .h200px {height: 200px;}
 .h280px {height: 280px;}
 
+.offset {margin-top: 15px}
+
 /* Min Height */
 .min-height-350px {min-height: 350px}
 .min-height-400px {min-height: 400px}

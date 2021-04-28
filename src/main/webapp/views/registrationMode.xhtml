@@ -328,7 +328,8 @@
         <p:panelGrid id="lessonTables" columns="3" styleClass="noBorder v-align-top lesson-tables"
                      columnClasses=",,w100pc">
 
-            <p:dataTable id="presentStudents"
+            <p:scrollPanel mode="native" style="height:300px">
+                <p:dataTable id="presentStudents"
                          var="pStudent"
                          widgetVar="pStudentsTable"
                          value="#{registrationModeBean.presentStudentsLazyModel}"
@@ -402,9 +403,10 @@
                         converter="localTimeConverter"/>
                 </p:column>
             </p:dataTable>
+            </p:scrollPanel>
 
-
-            <p:dataTable id="absentStudents"
+            <p:scrollPanel mode="native" style="height:300px">
+                <p:dataTable id="absentStudents"
                          var="aStudent"
                          widgetVar="aStudentsTable"
                          value="#{registrationModeBean.absentStudentsLazyModel}"
@@ -468,6 +470,7 @@
                 </p:column>
 
             </p:dataTable>
+            </p:scrollPanel>
 
             <p:panel id="additions" styleClass="additions">
                 <p:panel id="timer" styleClass="time ui-widget-header">
@@ -497,7 +500,7 @@
                 <p:panel id="additionalInfo"
                          rendered="#{not registrationModeBean.camera}"
                          header="#{msg['label.additional.info']}"
-                         styleClass="additional-info h200px">
+                         styleClass="additional-info h200px offset" >
                     <h:outputLabel value="#{msg['label.additional.praepostors']}" styleClass="bold"
                                    onclick="showPraepostors()"/>
                     <h:outputLabel id="praepostors" styleClass="none-display">

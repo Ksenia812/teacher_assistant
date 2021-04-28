@@ -9,6 +9,7 @@ import org.hibernate.annotations.Where;
 import javax.faces.bean.ManagedBean;
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -182,14 +183,14 @@ public class Student implements AssistantEntity, Person {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "entity_id", referencedColumnName = "id")
     @Where(clause = "type = 'STUDENT'")
-    private List<Note> notes;
+    private List<Note> notes = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "student_id", referencedColumnName = "id")
     private List<StudentNotification> notifications;
 
-    @OneToMany(mappedBy = "praepostor")
-    private List<Group> praepostorGroups;
+    @OneToMany(mappedBy = "praepostor", fetch = FetchType.EAGER)
+    private List<Group> praepostorGroups = new ArrayList<>();
 
     public Map<Integer, StudentLesson> getStudentLessons() {
         return studentLessons;
