@@ -31,8 +31,7 @@
                      selection="#{lessonModeBean.selectedLessonStudentModel}"
                      selectionMode="single"
 
-                     styleClass="lesson-mode-table #{lessonModeBean.lesson.group ne null ? 'group-mode' : ''}"
-        >
+                     styleClass="lesson-mode-table #{lessonModeBean.lesson.group ne null ? 'group-mode' : ''}">
 
             <p:ajax event="cellEdit" listener="#{lessonModeBean.onCellEdit}"/>
             <p:ajax event="filter" update=":lessonModeTable"/>
@@ -93,12 +92,10 @@
                             actionListener="#{lessonModeBean.setShowSkips(!lessonModeBean.showSkips)}"
                             update=":lessonModeTable"
                             icon="fa fa-fw fa-male"
-                            styleClass="#{lessonModeBean.showSkips ? 'green' : ''}"
-                        />
+                            styleClass="#{lessonModeBean.showSkips ? 'green' : ''}"/>
                         <p:commandButton icon="fa fa-fw fa-plus"
                                          update=":lessonInfoForm"
-                                         actionListener="#{lessonBean.initLesson(null)}"
-                        >
+                                         actionListener="#{lessonBean.initLesson(null)}">
                             <p:resetInput target=":lessonInfoForm:lessonDetail"/>
                         </p:commandButton>
                         <p:commandButton title="#{msg['btn.hide.menu']}" value="M"
@@ -169,8 +166,7 @@
                        var="attestation"
                        styleClass="attestation class-info #{student.student.studentLessons[attestation.id] eq null ? 'no-class' : ''}"
                        rendered="#{lessonModeBean.showAttestations}"
-                       id="attestation"
-            >
+                       id="attestation">
                 <f:facet name="header">
                     <h:panelGroup id="attestationInfo" styleClass="lesson-info">
                         <h:panelGroup styleClass="padding-top-15px block">

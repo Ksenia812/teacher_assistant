@@ -205,7 +205,6 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
         return null;
     }
 
-
     public int getAbsentStudentsPercent() {
         if (lessonStudents.size() != 0) {
             return (int) Math.round(1.0 * absentStudents.size() / lessonStudents.size() * 100);
@@ -397,6 +396,11 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
         if (Boolean.valueOf(getProperty(AUTO_BACKUP_NEW_MODE_PROPERTY_NAME))) {
             FileUtils.backupDatabase(reason);
         }
+    }
+
+    public List<Student> getPraepostors(){
+        return selectedLesson.getStream().getGroups().stream()
+            .map(Group::getPraepostor).collect(Collectors.toList());
     }
 
     //TODO add special sign to praepostor
