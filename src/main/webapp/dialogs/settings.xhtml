@@ -1,0 +1,66 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui" xmlns:c="http://java.sun.com/jsp/jstl/core"
+>
+    <h:form id="settingsForm" styleClass="settings-form">
+        <p:dialog header="#{msg['menu.settings']}"
+                  widgetVar="settingsDialog"
+                  position="center"
+                  draggable="false"
+                  modal="true"
+                  showEffect="fade"
+                  hideEffect="fade"
+                  resizable="false"
+                  fitViewport="true"
+                  onHide="PF('settingsDialog').content.empty()">
+
+            <p:ajax event="close" listener="#{settingsBean.exit}"/>
+
+            <h:form style="width:500px;">
+                <p:tabView orientation="left">
+                    <p:tab title="#{msg['settings.autobackup']}">
+                        <h:panelGrid columns="2">
+                            <h:outputLabel
+                                           value="#{msg['settings.autobackup.enable']}"/>
+                            <p:selectBooleanCheckbox id="autoBackupEnable"
+                                                     value="#{backupBean.autoBackup}"/>
+                            <h:outputLabel
+                                           value="#{msg['settings.autobackup.newmode']}"/>
+                            <p:selectBooleanCheckbox id="autoBackupOnNewNoteEnable"
+                                                     value="#{backupBean.autoBackupOnNewMode}"/>
+                        </h:panelGrid>
+
+                        <p:commandButton value="#{msg['btn.save.exit']}"
+                                         icon="fa fa-fw fa-save"
+                                         styleClass="margin-top-10px"
+                                         actionListener="#{backupBean.save}"/>
+                    </p:tab>
+                    <p:tab title="#{msg['settings.properties']}">
+                        <h:panelGrid columns="2">
+                            <h:outputLabel for="examMarkWeight"
+                                           value="#{msg['settings.properties.mark.exam.weight']}"/>
+                            <p:inputNumber id="examMarkWeight"
+                                           value="#{propertiesBean.examMarkWeight}"
+                                           minValue="0.00"
+                                           maxValue="1.00"/>
+                            <h:outputLabel
+                                           value="#{msg['btn.enableSound']}"/>
+                            <p:selectBooleanCheckbox value="#{serialBean.soundEnabled}"/>
+                            <h:outputLabel
+                                           value="#{msg['btn.enableLastNotesLoading']}"/>
+                            <p:selectBooleanCheckbox value="#{propertiesBean.isLastLessonNotesLoadingEnabled}"/>
+                        </h:panelGrid>
+
+                        <p:commandButton value="#{msg['btn.save.exit']}"
+                                         icon="fa fa-fw fa-save"
+                                         styleClass="margin-top-10px"
+                                         actionListener="#{propertiesBean.save}"/>
+                    </p:tab>
+                </p:tabView>
+            </h:form>
+
+        </p:dialog>
+    </h:form>
+</ui:composition>

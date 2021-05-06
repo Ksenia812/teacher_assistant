@@ -785,6 +785,11 @@ body {
 	width: 25px;
 }
 
+/*settings-form*/
+.settings-form .ui-widget-content {
+    width: 800px;
+}
+
 /* file upload*/
 .ui-fileupload .ui-fileupload-buttonbar {
 	background: none;

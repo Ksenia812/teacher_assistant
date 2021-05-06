@@ -8,7 +8,7 @@
         <p:growl id="messages" showDetail="true" escape="false"/>
 
         <p:menubar id="menu" autoDisplay="#{false}" styleClass="alignMenuItems" rendered="#{menuBean.showMenu}">
-            <p:submenu label="#{msg['menu.settings']}" icon="fa fa-fw fa-wrench">
+            <p:submenu label="#{msg['menu.file']}" icon="fa fa-fw fa-file">
                 <p:menuitem value="#{msg['menu.alarm']}"
                             icon="fa fa-fw fa-clock-o"
                             actionListener="#{alarmBean.initAlarm}"
@@ -19,15 +19,10 @@
                             actionListener="#{notificationSettingsBean.init}"
                             update=":notificationSettingForm"
                             disabled="#{not sessionBean.connected}"/>
-                <p:menuitem value="#{msg['settings.properties']}"
-                            icon="fa fa-fw fa-file"
-                            actionListener="#{propertiesBean.init}"
-                            update=":propertiesForm"
-                            disabled="#{not sessionBean.connected}"/>
-                <p:menuitem value="#{msg['settings.autobackup']}"
-                            icon="fa fa-fw fa-file"
-                            actionListener="#{backupBean.init}"
-                            update=":backupForm"
+                <p:menuitem value="#{msg['menu.settings']}"
+                            icon="fa fa-fw fa-wrench"
+                            actionListener="#{settingsBean.init}"
+                            update=":settingsForm"
                             disabled="#{not sessionBean.connected}"/>
                 <p:separator/>
                 <p:menuitem value="#{msg['menu.refresh']}"
