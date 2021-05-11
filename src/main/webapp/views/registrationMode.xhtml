@@ -6,18 +6,6 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:pe="http://primefaces.org/ui/extensions" xmlns:c="http://java.sun.com/jsp/jstl/core">
     <h:form id="lessonForm">
-        <script type="text/javascript">
-            function showDialog() {
-                // PF('amountOfAdditionalStudents').show();
-                let elementById = document.getElementById('lessonForm:showAdditionalStudentsBtn');
-                elementById.click();
-            }
-
-            function showPraepostors() {
-                const praepostors = document.getElementById('lessonForm:praepostors');
-                praepostors.style.display = (praepostors.style.display === 'none') ? 'inline' : 'none';
-            }
-        </script>
         <p:socket onMessage="spawnNotification" channel="/notify"/>
         <p:socket channel="/register">
             <p:ajax event="message"
@@ -290,7 +278,7 @@
                                           style="color: blue; font-weight: bold"/>
                             <h:outputText id="registrationProgress"
                                           value="&lt;span style = &#34;color: blue; font-weight: bold&#34; &gt;#{registrationModeBean.absentStudents.size()}&lt;/span&gt;
-                                &lt;span style = &#34;font-weight: normal&#34; &gt;/#{registrationModeBean.getAbsentStudentsPercent()}%&lt;/span&gt;"
+                                &lt;span style = &#34;white-space: pre-wrap;&#34; &gt;   #{registrationModeBean.getAbsentStudentsPercent()}%&lt;/span&gt;"
                                           escape="false"/>
 
                             <h:outputText id="additionalStudents" styleClass="red"
@@ -304,7 +292,7 @@
                                 <ui:repeat var="additionalStudent" value="#{registrationModeBean.additionalStudents}">
                                     <h:panelGrid columns="1" styleClass="w100pc">
                                         <h:outputText
-                                            value="#{additionalStudent.firstName.concat(' ')} #{additionalStudent.lastName}"/>
+                                            value="#{additionalStudent.firstName.concat(' ')} #{additionalStudent.lastName}, #{additionalStudent.groupNames}"/>
                                     </h:panelGrid>
                                 </ui:repeat>
                             </p:tooltip>
@@ -313,7 +301,8 @@
                         <p:panel>
                             <p:outputLabel value="#{registrationModeBean.selectedLesson.stream.name}"/>
                             <p:outputLabel rendered="#{registrationModeBean.selectedLesson.group ne null}"
-                                           value="#{registrationModeBean.selectedLesson.group.name}"/>
+                                           value="#{registrationModeBean.selectedLesson.group.name}"
+                                            styleClass="bold"/>
                             <p:outputLabel
                                 value="#{msg[registrationModeBean.selectedLesson.type.key].concat(' ').concat(utility.getLessonCount(registrationModeBean.selectedLesson))}"/>
                             <p:outputLabel value="#{registrationModeBean.selectedLesson.date}"
@@ -504,7 +493,8 @@
                          styleClass="additional-info h200px offset">
                     <h:outputLabel value="#{msg['label.additional.praepostors']}" styleClass="bold"
                                    onclick="showPraepostors()"/>
-                    <h:outputLabel id="praepostors" styleClass="none-display">
+                    <h:outputLabel id="praepostors"
+                    styleClass="#{registrationModeBean.selectedLesson.getType().equals(LessonType.LECTURE) ? 'hidden' : 'inline'}">
                         <ui:repeat var="praepostor"
                                    value="#{registrationModeBean.getPraepostors()}">
                             <h:panelGroup styleClass="w100pc">
@@ -519,6 +509,7 @@
                             </h:panelGroup>
                         </ui:repeat>
                     </h:outputLabel>
+
                     <p:separator/>
 
                     <h:outputLabel value="#{msg['label.additional.lesson.info']} " styleClass="bold"/>
@@ -838,4 +829,18 @@
             </p:outputPanel>
         </p:dialog>
     </h:form>
+
+    <script type="text/javascript">
+        function showDialog() {
+            // PF('amountOfAdditionalStudents').show();
+            let elementById = document.getElementById('lessonForm:showAdditionalStudentsBtn');
+            elementById.click();
+        }
+
+        function showPraepostors() {
+            const praepostors = document.getElementById('lessonForm:praepostors');
+            console.log(praepostors.style.display);
+            praepostors.style.display = (praepostors.style.display === 'none') ? 'inline' : 'none';
+        }
+    </script>
 </ui:composition>

@@ -399,8 +399,15 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
     }
 
     public List<Student> getPraepostors(){
-        return selectedLesson.getStream().getGroups().stream()
-            .map(Group::getPraepostor).collect(Collectors.toList());
+        List<Student> praepostors = new ArrayList<>();
+        if (selectedLesson.getType().equals(LessonType.LECTURE)) {
+            praepostors = selectedLesson.getStream().getGroups().stream()
+                .map(Group::getPraepostor).collect(Collectors.toList());
+        }
+        else {
+            praepostors.add(selectedLesson.getGroup().getPraepostor());
+        }
+        return praepostors;
     }
 
     //TODO add special sign to praepostor
@@ -792,7 +799,7 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
                 formatter.format(l.getDate()), convertLessonType(l.getLessonType()), l.getGroupName()));
         }
 
-        return studentAdditionalLessonsInfo;
+            return studentAdditionalLessonsInfo;
     }
 
     public void onStudentRowSelect(SelectEvent event) {

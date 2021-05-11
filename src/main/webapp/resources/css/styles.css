@@ -58,7 +58,7 @@ body {
 .h200px {height: 200px;}
 .h280px {height: 280px;}
 
-.offset {margin-top: 15px}
+.offset {margin-top: 7px}
 
 /* Min Height */
 .min-height-350px {min-height: 350px}
@@ -79,13 +79,6 @@ body {
 .top {vertical-align: top;}
 #wrapper .middle {vertical-align: middle;}
 
-/* Display */
-.inline {
-	display: inline;
-}
-.none-display{
-    display: none;
-}
 #wrapper .block {display: block;}
 #wrapper .inline-block {display: inline-block;}
 
@@ -363,7 +356,7 @@ body {
 	padding: 0;
 }
 
-.additional-info .ui-panel-titlebar {
+.additioofnal-info .ui-panel-titlebar {
 	text-align: center;
 	color: blue;
 	text-transform: uppercase;
@@ -892,9 +885,14 @@ body {
     display: inline-flex;
 }
 
+/* Display */
+.inline {
+    display: inline;
+}
 .hidden {
     display: none;
 }
+
 ::-webkit-scrollbar {
     width: 0 !important;
 }
