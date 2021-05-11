@@ -15,12 +15,13 @@
             <h:panelGrid columns="2" columnClasses="w250px h280px,">
                 <p:graphicImage value="#{imageBean.getImagePath(studentModeBean.lessonStudent.student.cardUid)}"
                                 styleClass="student-photo"/>
-                <h:panelGroup>
+                <h:panelGroup id="studentInfo">
                     <p:outputLabel value="#{studentModeBean.lessonStudent.student.lastName}"
                                    styleClass="uppercase bold blue font-size-30pt"/>
                     <p:outputLabel value="#{studentModeBean.lessonStudent.student.firstName}"
                                    styleClass="uppercase bold blue font-size-30pt"/>
                     <p:outputLabel value="#{studentModeBean.lessonStudent.student.patronymic}"
+                                   rendered="#{studentModeBean.hidePatronymic}"
                                    styleClass="uppercase bold blue font-size-30pt"/>
                     <p:outputLabel styleClass="margin-top-20px"
                                    value="#{studentModeBean.stream.department.abbreviation}"/>
@@ -34,7 +35,18 @@
 
                     <p:outputLabel value="#{studentModeBean.lessonStudent.student.phone}" styleClass="margin-top-10px"/>
                     <p:outputLabel value="#{studentModeBean.lessonStudent.student.email}"/>
-                    <p:outputLabel value="#{studentModeBean.lessonStudent.student.cardUid}"/>
+                    <h:panelGroup id="studentSkips" rendered="#{studentModeBean.stream ne null}"
+                                  styleClass="dark-red bold">
+                        <h:outputText
+                            value="#{msg['label.skips']}: #{studentModeBean.lessonStudent.totalSkip} (#{studentModeBean.lessonStudent.skips})"
+                            rendered="#{(studentModeBean.lessonStudent.totalSkip gt 0)}"/>
+                        <h:outputText value="#{msg['lesson.visit.noSkip']}"
+                                      rendered="#{not (studentModeBean.lessonStudent.totalSkip gt 0)}"/>
+                        <h:outputFormat value="#{msg['label.additionalLessons']}" styleClass="margin-left-10px"
+                                        rendered="#{studentModeBean.lessonStudent.additionalLessons.size() gt 0}">
+                            <f:param value="#{studentModeBean.lessonStudent.additionalLessons.size()}"/>
+                        </h:outputFormat>
+                    </h:panelGroup>
                 </h:panelGroup>
             </h:panelGrid>
 
@@ -69,6 +81,16 @@
                                 <f:ajax event="click" render=":studentModeForm:students"
                                         listener="#{studentModeBean.setStudents(null)}"/>
                             </p:selectOneRadio>
+                            <p:selectBooleanCheckbox
+                                value="#{studentModeBean.hidePatronymic}"
+                                itemLabel="#{msg['studentMode.show.patronymic']}">
+                                <f:ajax event="change" render=":studentModeForm:studentInfo"/>
+                            </p:selectBooleanCheckbox>
+                            <p:selectBooleanCheckbox
+                                value="#{studentModeBean.hideChip}"
+                                itemLabel="#{msg['studentMode.show.chip']}">
+                                <f:ajax event="change" render=":studentModeForm:chip"/>
+                            </p:selectBooleanCheckbox>
                         </p:overlayPanel>
 
 
@@ -170,7 +192,8 @@
                     </h:panelGroup>
 
                 </h:panelGrid>
-                <h:panelGroup styleClass="block margin-bottom-40px" rendered="#{studentModeBean.stream ne null}">
+                <h:panelGroup id="chip" styleClass="block margin-bottom-40px"
+                              rendered="#{studentModeBean.stream ne null}">
                     <p:outputLabel value="#{studentModeBean.stream.name}"/>
                     <p:outputLabel value="#{studentModeBean.stream.discipline.name}"/>
                     <p:outputLabel value="#{msg['studentMode.stream.course']} #{studentModeBean.stream.course}"/>
@@ -182,17 +205,12 @@
                         <f:param
                             value="#{studentModeBean.stream.labCount ne null ? studentModeBean.stream.labCount : 'XX'}"/>
                     </h:outputFormat>
-                </h:panelGroup>
-                <h:panelGroup id="studentSkips" rendered="#{studentModeBean.stream ne null}" styleClass="dark-red bold">
-                    <h:outputText
-                        value="#{msg['label.skips']}: #{studentModeBean.lessonStudent.totalSkip} (#{studentModeBean.lessonStudent.skips})"
-                        rendered="#{(studentModeBean.lessonStudent.totalSkip gt 0)}"/>
-                    <h:outputText value="#{msg['lesson.visit.noSkip']}"
-                                  rendered="#{not (studentModeBean.lessonStudent.totalSkip gt 0)}"/>
-                    <h:outputFormat value="#{msg['label.additionalLessons']}" styleClass="margin-left-10px"
-                                    rendered="#{studentModeBean.lessonStudent.additionalLessons.size() gt 0}">
-                        <f:param value="#{studentModeBean.lessonStudent.additionalLessons.size()}"/>
-                    </h:outputFormat>
+                    <p:outputPanel style="text-align:center">
+                        <h:outputText value="#{msg['menu.student.chip']}: "
+                                      rendered="#{studentModeBean.hideChip}"/>
+                        <h:outputText value="#{studentModeBean.lessonStudent.student.cardUid}"
+                                      rendered="#{studentModeBean.hideChip}"/>
+                    </p:outputPanel>
                 </h:panelGroup>
             </h:panelGroup>
         </h:panelGrid>

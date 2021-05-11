@@ -62,6 +62,16 @@ public class StudentModeBean implements Serializable, SerialListenerBean {
     private LessonStudentModel selectedStudent;
     private List<Student> students;
     private String studentsType = "ALL";
+    private boolean hidePatronymic;
+    private boolean hideChip;
+
+    public void setHidePatronymic(boolean hidePatronymic) {
+        this.hidePatronymic = hidePatronymic;
+    }
+
+    public void setHideChip(boolean hideChip) {
+        this.hideChip = hideChip;
+    }
 
     public void initStudentMode(Student student, Stream stream) {
         if (Boolean.valueOf(getProperty(AUTO_BACKUP_NEW_MODE_PROPERTY_NAME))) {

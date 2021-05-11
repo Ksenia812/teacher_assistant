@@ -7,6 +7,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.grsu.teacherassistant.constants.Constants.GROUPS_DELIMITER;
@@ -103,12 +104,12 @@ public class Stream implements AssistantEntity {
         Stream stream = (Stream) o;
 
         if (active != stream.active) return false;
-        if (id != null ? !id.equals(stream.id) : stream.id != null) return false;
-        if (name != null ? !name.equals(stream.name) : stream.name != null) return false;
-        if (description != null ? !description.equals(stream.description) : stream.description != null) return false;
-        if (createDate != null ? !createDate.equals(stream.createDate) : stream.createDate != null) return false;
-        if (course != null ? !course.equals(stream.course) : stream.course != null) return false;
-        return expirationDate != null ? expirationDate.equals(stream.expirationDate) : stream.expirationDate == null;
+        if (!Objects.equals(id, stream.id)) return false;
+        if (!Objects.equals(name, stream.name)) return false;
+        if (!Objects.equals(description, stream.description)) return false;
+        if (!Objects.equals(createDate, stream.createDate)) return false;
+        if (!Objects.equals(course, stream.course)) return false;
+        return Objects.equals(expirationDate, stream.expirationDate);
     }
 
     @Override

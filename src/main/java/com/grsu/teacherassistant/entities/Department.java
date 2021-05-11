@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.faces.bean.ManagedBean;
 import javax.persistence.*;
+import java.util.Objects;
 
 /**
  * @author Pavel Zaychick
@@ -34,9 +35,9 @@ public class Department implements AssistantEntity {
 
         Department that = (Department) o;
 
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        if (abbreviation != null ? !abbreviation.equals(that.abbreviation) : that.abbreviation != null) return false;
+        if (!Objects.equals(id, that.id)) return false;
+        if (!Objects.equals(name, that.name)) return false;
+        if (!Objects.equals(abbreviation, that.abbreviation)) return false;
 
         return true;
     }

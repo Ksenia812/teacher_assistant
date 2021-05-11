@@ -25,7 +25,7 @@ public class StudentService {
 	private static final String STUDENT_PHOTO_EXTENSION = ".jpg";
 
 	public static String getPersonnelNumber(Integer cardId) {
-		JSONObject json = readJsonFromUrl(PERSONNEL_NUMBER_URL + Integer.toString(cardId));
+		JSONObject json = readJsonFromUrl(PERSONNEL_NUMBER_URL + cardId);
 		if (json != null && json.get(PERSONNEL_NUMBER_NAME) != JSONObject.NULL) {
 			return (String) json.get(PERSONNEL_NUMBER_NAME);
 		}

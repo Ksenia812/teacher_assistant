@@ -7,6 +7,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Pavel Zaychick
@@ -69,9 +70,9 @@ public class Group implements AssistantEntity {
         Group group = (Group) o;
 
         if (active != group.active) return false;
-        if (id != null ? !id.equals(group.id) : group.id != null) return false;
-        if (name != null ? !name.equals(group.name) : group.name != null) return false;
-        return expirationDate != null ? expirationDate.equals(group.expirationDate) : group.expirationDate == null;
+        if (!Objects.equals(id, group.id)) return false;
+        if (!Objects.equals(name, group.name)) return false;
+        return Objects.equals(expirationDate, group.expirationDate);
     }
 
     @Override
