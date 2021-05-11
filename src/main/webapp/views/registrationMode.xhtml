@@ -278,7 +278,7 @@
                                           style="color: blue; font-weight: bold"/>
                             <h:outputText id="registrationProgress"
                                           value="&lt;span style = &#34;color: blue; font-weight: bold&#34; &gt;#{registrationModeBean.absentStudents.size()}&lt;/span&gt;
-                                &lt;span style = &#34;font-weight: normal&#34; &gt;/#{registrationModeBean.getAbsentStudentsPercent()}%&lt;/span&gt;"
+                                &lt;span style = &#34;white-space: pre-wrap;&#34; &gt;   #{registrationModeBean.getAbsentStudentsPercent()}%&lt;/span&gt;"
                                           escape="false"/>
 
                             <h:outputText id="additionalStudents" styleClass="red"
@@ -301,7 +301,8 @@
                         <p:panel>
                             <p:outputLabel value="#{registrationModeBean.selectedLesson.stream.name}"/>
                             <p:outputLabel rendered="#{registrationModeBean.selectedLesson.group ne null}"
-                                           value="#{registrationModeBean.selectedLesson.group.name}"/>
+                                           value="#{registrationModeBean.selectedLesson.group.name}"
+                                            styleClass="bold"/>
                             <p:outputLabel
                                 value="#{msg[registrationModeBean.selectedLesson.type.key].concat(' ').concat(utility.getLessonCount(registrationModeBean.selectedLesson))}"/>
                             <p:outputLabel value="#{registrationModeBean.selectedLesson.date}"
