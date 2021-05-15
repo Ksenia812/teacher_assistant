@@ -51,7 +51,9 @@ public class StudentModeBean implements Serializable, SerialListenerBean {
 
     private Stream stream;
     private LessonStudentModel lessonStudent;
+    private int selectStudentCount;
     private Student student;
+    private Student previousStudent;
     private StudentLesson selectedStudentLesson;
     private String newNote;
     private StudentLesson editedStudentLesson;
@@ -79,6 +81,7 @@ public class StudentModeBean implements Serializable, SerialListenerBean {
         }
         serialBean.setCurrentListener(this);
         clear();
+        this.previousStudent = this.student;
         this.student = student;
         this.stream = stream;
 
@@ -348,7 +351,35 @@ public class StudentModeBean implements Serializable, SerialListenerBean {
             if (index == -1 || index == students.size() - 1) {
                 student = students.get(0);
             } else {
+                previousStudent = student;
                 student = students.get(index + 1);
+            }
+            initStudentMode(student, stream);
+        }
+    }
+
+    public void previousStudent() {
+        List<Student> students = getStudents();
+        if (students.size() > 0) {
+            int index = students.indexOf(student);
+            if (index == -1 || index == students.size() - 1) {
+                student = students.get(0);
+            } else {
+                previousStudent = student;
+                student = students.get(index - 1);
+            }
+            initStudentMode(student, stream);
+        }
+    }
+
+    public void returnToPreviousStudent() {
+        List<Student> students = getStudents();
+        if (students.size() > 0) {
+            int index = students.indexOf(previousStudent);
+            if (index == -1 || index == students.size() - 1) {
+                student = students.get(0);
+            } else {
+                student = students.get(index);
             }
             initStudentMode(student, stream);
         }

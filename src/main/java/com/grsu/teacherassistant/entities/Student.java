@@ -151,6 +151,10 @@ public class Student implements AssistantEntity, Person {
     private Integer cardId;
 
     @Basic
+    @Column(name = "record_book")
+    private String recordBook;
+
+    @Basic
     @Column(name = "first_name")
     private String firstName;
 
@@ -287,6 +291,7 @@ public class Student implements AssistantEntity, Person {
             ", cardId='" + cardId + '\'' +
             ", firstName='" + firstName + '\'' +
             ", lastName='" + lastName + '\'' +
+            ", recordBook='" + recordBook + '\'' +
             ", patronymic='" + patronymic + '\'' +
             ", phone='" + phone + '\'' +
             ", email='" + email + '\'' +

@@ -66,6 +66,7 @@ CREATE TABLE STUDENT (
     first_name TEXT,
     last_name  TEXT,
     patronymic TEXT,
+    record_book TEXT,
     phone      TEXT,
     email      TEXT,
     gender     TEXT,

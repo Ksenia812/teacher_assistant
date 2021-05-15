@@ -85,6 +85,7 @@ public class CSVUtils {
 				studentFromDB.setFirstName(student.getFirstName());
 				studentFromDB.setPatronymic(student.getPatronymic());
 				studentFromDB.setCardId(student.getCardId());
+				studentFromDB.setRecordBook(student.getRecordBook().trim());
 				student = studentFromDB;
 				student.getGroups().add(group);
 				EntityDAO.update(student);
@@ -190,6 +191,7 @@ public class CSVUtils {
 		student.setLastName(capitalize(lowerCase(record[0])));
 		student.setFirstName(capitalize(lowerCase(record[1])));
 		student.setPatronymic(capitalize(lowerCase(record[2])));
+		student.setRecordBook(record[4]);
 
 		String parsedUid = record[3];
 		if (parsedUid == null || parsedUid.isEmpty()) {

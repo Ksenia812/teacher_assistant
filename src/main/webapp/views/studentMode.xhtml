@@ -65,6 +65,16 @@
                     </p:selectOneMenu>
 
                     <h:panelGroup styleClass="buttons">
+                        <p:commandButton icon="fa fa-backward"
+                                         title="#{msg['studentMode.btn.previous']}"
+                                         update=":studentModeForm"
+                                         actionListener="#{studentModeBean.returnToPreviousStudent}">
+                        </p:commandButton>
+                        <p:commandButton icon="fa fa-fw fa-arrow-left"
+                                         title="#{msg['studentMode.btn.next.by.alphabet']}"
+                                         update=":studentModeForm"
+                                         actionListener="#{studentModeBean.previousStudent}">
+                        </p:commandButton>
                         <p:commandButton icon="fa fa-fw fa-arrow-right"
                                          title="#{msg['studentMode.btn.next']}"
                                          update=":studentModeForm"
@@ -196,16 +206,18 @@
                               rendered="#{studentModeBean.stream ne null}">
                     <p:outputLabel value="#{studentModeBean.stream.name}"/>
                     <p:outputLabel value="#{studentModeBean.stream.discipline.name}"/>
-                    <p:outputLabel value="#{msg['studentMode.stream.course']} #{studentModeBean.stream.course}"/>
-                    <h:outputFormat value="#{msg['studentMode.stream.lessonsPlan']}">
+                    <h:outputFormat value="#{studentModeBean.stream.labCount ne null ?
+                     msg['studentMode.stream.lessonsPlan'] : msg['studentMode.stream.lessonsPlan.without.lab']}"
+                                    styleClass="bold margin-top-5px">
                         <f:param
                             value="#{studentModeBean.stream.lectureCount ne null ? studentModeBean.stream.lectureCount : 'XX'}"/>
                         <f:param
                             value="#{studentModeBean.stream.practicalCount ne null ? studentModeBean.stream.practicalCount : 'XX'}"/>
                         <f:param
-                            value="#{studentModeBean.stream.labCount ne null ? studentModeBean.stream.labCount : 'XX'}"/>
+                            value="#{studentModeBean.stream.labCount ne null ? studentModeBean.stream.labCount : ''}"/>
                     </h:outputFormat>
-                    <p:outputPanel style="text-align:center">
+                    <p:outputLabel value="#{msg['studentMode.stream.course']} #{studentModeBean.stream.course}"/>
+                    <p:outputPanel style="text-align:center;font-weight: bold;">
                         <h:outputText value="#{msg['menu.student.chip']}: "
                                       rendered="#{studentModeBean.hideChip}"/>
                         <h:outputText value="#{studentModeBean.lessonStudent.student.cardUid}"
