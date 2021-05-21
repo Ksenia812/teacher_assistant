@@ -194,11 +194,11 @@
                             </p:commandButton>
                         </p:overlayPanel>
 
-                        <p:commandButton title="#{msg['btn.hide.menu']}" icon="fa fa-fw fa-align-center"
+                        <p:commandButton title="#{msg['btn.hide.menu']}" value="М"
                                          update=":menuForm :studentModeForm:buttons"
                                          actionListener="#{menuBean.hideMenu}"
                                          rendered="#{menuBean.showMenu}"/>
-                        <p:commandButton title="#{msg['btn.show.menu']}" icon="fa fa-fw fa-align-justify"
+                        <p:commandButton title="#{msg['btn.show.menu']}" value="М"
                                          update=":menuForm :studentModeForm:buttons"
                                          actionListener="#{menuBean.showMenu}"
                                          rendered="#{not menuBean.showMenu}"/>
@@ -230,7 +230,7 @@
 
                         <h:outputText
                             value="#{msg['studentMode.chip']}: #{studentModeBean.lessonStudent.student.cardUid}"
-                            style="margin-left: 30px" rendered="#{studentModeBean.hideChip}"/>
+                            style="margin-left: 30px;" styleClass="bold" rendered="#{studentModeBean.hideChip}"/>
                     </h:outputLabel>
                 </h:panelGroup>
             </h:panelGroup>
