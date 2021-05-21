@@ -72,8 +72,8 @@
                             </h:outputLink>
 
                             <h:outputText
-                                rendered="#{registrationModeBean.getTotalStudentSkipsAmount(registrationModeBean.processedStudent) eq 0}"
-                                styleClass="lowercase red" value="0"/>
+                                    rendered="#{registrationModeBean.getTotalStudentSkipsAmount(registrationModeBean.processedStudent) eq 0}"
+                                    styleClass="lowercase red" value="0"/>
 
                             <!--Tooltips with skipped lessons' dates-->
                             <p:tooltip for="studentTotalSkipsAdditionalLessons" position="bottom"
@@ -170,11 +170,11 @@
                                          actionListener="#{serialBean.enableSound}"
                                          rendered="#{serialBean.recordStarted and not serialBean.soundEnabled}"/>
                         <p:commandButton
-                            title="#{msg[registrationModeBean.camera ? 'btn.camera.turnOff' : 'btn.camera.turnOn']}"
-                            styleClass="#{registrationModeBean.camera ? 'red' : ''}"
-                            icon="fa fa-fw fa-video-camera"
-                            update=":lessonForm:lessonButtons :lessonForm:additions"
-                            actionListener="#{registrationModeBean.setCamera(!registrationModeBean.camera)}"
+                                title="#{msg[registrationModeBean.camera ? 'btn.camera.turnOff' : 'btn.camera.turnOn']}"
+                                styleClass="#{registrationModeBean.camera ? 'red' : ''}"
+                                icon="fa fa-fw fa-video-camera"
+                                update=":lessonForm:lessonButtons :lessonForm:additions"
+                                actionListener="#{registrationModeBean.setCamera(!registrationModeBean.camera)}"
                         />
 
                         <p:commandButton title="#{msg['btn.addVisit']}" icon="fa fa-fw fa-plus"
@@ -272,7 +272,7 @@
 
                             <h:outputText value="#{msg['lesson.students.present']}"/>
                             <h:outputText
-                                value="#{registrationModeBean.presentStudents.size() - registrationModeBean.additionalStudents.size()}"/>
+                                    value="#{registrationModeBean.presentStudents.size() - registrationModeBean.additionalStudents.size()}"/>
 
                             <h:outputText value="#{msg['lesson.students.absent']}"
                                           style="color: blue; font-weight: bold"/>
@@ -292,7 +292,7 @@
                                 <ui:repeat var="additionalStudent" value="#{registrationModeBean.additionalStudents}">
                                     <h:panelGrid columns="1" styleClass="w100pc">
                                         <h:outputText
-                                            value="#{additionalStudent.firstName.concat(' ')} #{additionalStudent.lastName}, #{additionalStudent.groupNames}"/>
+                                                value="#{additionalStudent.firstName.concat(' ')} #{additionalStudent.lastName}, #{additionalStudent.groupNames}"/>
                                     </h:panelGrid>
                                 </ui:repeat>
                             </p:tooltip>
@@ -302,9 +302,9 @@
                             <p:outputLabel value="#{registrationModeBean.selectedLesson.stream.name}"/>
                             <p:outputLabel rendered="#{registrationModeBean.selectedLesson.group ne null}"
                                            value="#{registrationModeBean.selectedLesson.group.name}"
-                                            styleClass="bold"/>
+                                           styleClass="bold"/>
                             <p:outputLabel
-                                value="#{msg[registrationModeBean.selectedLesson.type.key].concat(' ').concat(utility.getLessonCount(registrationModeBean.selectedLesson))}"/>
+                                    value="#{msg[registrationModeBean.selectedLesson.type.key].concat(' ').concat(utility.getLessonCount(registrationModeBean.selectedLesson))}"/>
                             <p:outputLabel value="#{registrationModeBean.selectedLesson.date}"
                                            converter="localDateConverter"/>
                             <p:outputLabel value="#{registrationModeBean.selectedLesson.schedule.caption}"/>
@@ -359,18 +359,18 @@
                                          disabled="#{registrationModeBean.selectedPresentStudents eq null or registrationModeBean.selectedPresentStudents.size() eq 0}"/>
                     </f:facet>
                     <p:commandButton
-                        update=":lessonForm:presentStudents :lessonForm:absentStudents :lessonForm:attendanceInfo :lessonForm:registrationProgress"
-                        icon="fa fa-fw fa-angle-right" title="Remove"
-                        styleClass="w25px"
-                        actionListener="#{registrationModeBean.removeLessonStudent(pStudent)}"/>
+                            update=":lessonForm:presentStudents :lessonForm:absentStudents :lessonForm:attendanceInfo :lessonForm:registrationProgress"
+                            icon="fa fa-fw fa-angle-right" title="Remove"
+                            styleClass="w25px"
+                            actionListener="#{registrationModeBean.removeLessonStudent(pStudent)}"/>
                 </p:column>
 
                 <p:column
-                    headerText="#{msg['label.table.present']}"
-                    sortBy="#{pStudent.name}"
-                    filterBy="#{pStudent.name}"
-                    filterMatchMode="startsWith"
-                    styleClass="bold w210px blue">
+                        headerText="#{msg['label.table.present']}"
+                        sortBy="#{pStudent.name}"
+                        filterBy="#{pStudent.name}"
+                        filterMatchMode="startsWith"
+                        styleClass="bold w210px blue">
                     <h:outputText styleClass="bold #{pStudent.additional ? 'blue' : ''}" value="#{pStudent.name}"/>
                 </p:column>
 
@@ -386,11 +386,11 @@
 
 
                 <p:column
-                    sortBy="#{pStudent.registrationTime}"
-                    styleClass="center w70px">
+                        sortBy="#{pStudent.registrationTime}"
+                        styleClass="center w70px">
                     <h:outputText
-                        value="#{pStudent.registrationTime}"
-                        converter="localTimeConverter"/>
+                            value="#{pStudent.registrationTime}"
+                            converter="localTimeConverter"/>
                 </p:column>
             </p:dataTable>
 
@@ -435,18 +435,18 @@
                                          disabled="#{registrationModeBean.selectedAbsentStudents eq null or registrationModeBean.selectedAbsentStudents.size() eq 0}"/>
                     </f:facet>
                     <p:commandButton
-                        update=":lessonForm:presentStudents :lessonForm:absentStudents :lessonForm:lastVisitInfo :lessonForm:attendanceInfo :lessonForm:additionalInfo :lessonForm:registrationProgress"
-                        icon="fa fa-fw fa-angle-left" title="Add"
-                        styleClass="w25px"
-                        actionListener="#{registrationModeBean.addLessonStudent(aStudent)}"/>
+                            update=":lessonForm:presentStudents :lessonForm:absentStudents :lessonForm:lastVisitInfo :lessonForm:attendanceInfo :lessonForm:additionalInfo :lessonForm:registrationProgress"
+                            icon="fa fa-fw fa-angle-left" title="Add"
+                            styleClass="w25px"
+                            actionListener="#{registrationModeBean.addLessonStudent(aStudent)}"/>
                 </p:column>
 
                 <p:column
-                    headerText="#{msg['label.table.absent']}"
-                    sortBy="#{aStudent.name}"
-                    filterBy="#{aStudent.name}"
-                    filterMatchMode="startsWith"
-                    styleClass="bold w210px">
+                        headerText="#{msg['label.table.absent']}"
+                        sortBy="#{aStudent.name}"
+                        filterBy="#{aStudent.name}"
+                        filterMatchMode="startsWith"
+                        styleClass="bold w210px">
                     <h:outputText styleClass="bold" value="#{aStudent.name}"/>
                 </p:column>
 
@@ -465,13 +465,13 @@
             <p:panel id="additions" styleClass="additions">
                 <p:panel id="timer" styleClass="time ui-widget-header">
                     <pe:timer
-                        widgetVar="timer"
-                        rendered="#{registrationModeBean.timer ne 0}"
-                        format="HH:mm:ss"
-                        timeout="#{registrationModeBean.timer}"
-                        listener="#{registrationModeBean.calculateTimer}"
-                        singleRun="false"
-                        update="timer"/>
+                            widgetVar="timer"
+                            rendered="#{registrationModeBean.timer ne 0}"
+                            format="HH:mm:ss"
+                            timeout="#{registrationModeBean.timer}"
+                            listener="#{registrationModeBean.calculateTimer}"
+                            singleRun="false"
+                            update="timer"/>
                     <h:outputText value="00:00:00" rendered="#{registrationModeBean.timer eq 0}"/>
                     /
                     <p:clock pattern="HH:mm:ss"/>
@@ -494,7 +494,7 @@
                     <h:outputLabel value="#{msg['label.additional.praepostors']}" styleClass="bold"
                                    onclick="showPraepostors()"/>
                     <h:outputLabel id="praepostors"
-                    styleClass="#{registrationModeBean.selectedLesson.getType().equals(LessonType.LECTURE) ? 'hidden' : 'inline'}">
+                                   styleClass="#{registrationModeBean.selectedLesson.getType().equals(LessonType.LECTURE) ? 'hidden' : 'inline'}">
                         <ui:repeat var="praepostor"
                                    value="#{registrationModeBean.getPraepostors()}">
                             <h:panelGroup styleClass="w100pc">
@@ -505,7 +505,7 @@
                                                     styleClass="student-photo"/>
                                 </p:overlayPanel>
                                 <h:outputText
-                                    value="#{praepostor.lastName} #{praepostor.firstName}, #{praepostor.getGroupNames()}"/>
+                                        value="#{praepostor.lastName} #{praepostor.firstName}, #{praepostor.getGroupNames()}"/>
                             </h:panelGroup>
                         </ui:repeat>
                     </h:outputLabel>
@@ -530,11 +530,11 @@
 
                     <h:panelGroup rendered="#{notificationSettingsBean.active}">
                         <h:panelGroup
-                            rendered="#{notificationSettingsBean.settings['PRAEPOSTOR'].active and (registrationModeBean.processedStudent.praepostorGroups.size() gt 0)}"
-                            styleClass="bold dark-red block">
+                                rendered="#{notificationSettingsBean.settings['PRAEPOSTOR'].active and (registrationModeBean.processedStudent.praepostorGroups.size() gt 0)}"
+                                styleClass="bold dark-red block">
                             <h:outputText value="#{msg['group.praepostor']}: "/>
                             <h:outputText
-                                value="#{utility.getGroupNames(registrationModeBean.processedStudent.praepostorGroups)}"/>
+                                    value="#{utility.getGroupNames(registrationModeBean.processedStudent.praepostorGroups)}"/>
                         </h:panelGroup>
 
                         <h:panelGroup rendered="#{notificationSettingsBean.settings['ABSENCE'].active}">
@@ -576,8 +576,8 @@
                         actionListener="#{studentBean.initStudent(registrationModeBean.selectedPresentStudents.get(0).student)}">
                 <p:resetInput target=":studentInfoForm:studentDetail"/>
                 <f:setPropertyActionListener
-                    value=":lessonForm:presentStudents :lessonForm:lastVisitInfo :lessonForm:additionalInfo"
-                    target="#{studentBean.updateId}"/>
+                        value=":lessonForm:presentStudents :lessonForm:lastVisitInfo :lessonForm:additionalInfo"
+                        target="#{studentBean.updateId}"/>
             </p:menuitem>
             <p:menuitem value="#{msg['notification']}"
                         update=":lessonForm:notifications"
@@ -609,8 +609,8 @@
                         actionListener="#{studentBean.initStudent(registrationModeBean.selectedAbsentStudents.get(0).student)}">
                 <p:resetInput target=":studentInfoForm:studentDetail"/>
                 <f:setPropertyActionListener
-                    value=":lessonForm:absentStudents :lessonForm:lastVisitInfo :lessonForm:additionalInfo"
-                    target="#{studentBean.updateId}"/>
+                        value=":lessonForm:absentStudents :lessonForm:lastVisitInfo :lessonForm:additionalInfo"
+                        target="#{studentBean.updateId}"/>
             </p:menuitem>
             <p:menuitem value="#{msg['notification']}"
                         update=":lessonForm:notifications"
@@ -714,9 +714,9 @@
                 </ui:repeat>
                 <p:separator/>
                 <p:commandButton
-                    actionListener="#{registrationModeBean.initLesson(registrationModeBean.lastLecture, propertiesBean.isLastLessonNotesLoadingEnabled)}"
-                    update=":lessonForm"
-                    value="#{msg['lecture']}" rendered="#{registrationModeBean.lastLecture != null}"/>
+                        actionListener="#{registrationModeBean.initLesson(registrationModeBean.lastLecture, propertiesBean.isLastLessonNotesLoadingEnabled)}"
+                        update=":lessonForm"
+                        value="#{msg['lecture']}" rendered="#{registrationModeBean.lastLecture != null}"/>
                 <ui:repeat var="note"
                            value="#{registrationModeBean.lastLecture.notes}">
                     <h:panelGrid columns="3" columnClasses="w300px, w20px">
@@ -726,9 +726,9 @@
                 </ui:repeat>
                 <p:separator/>
                 <p:commandButton
-                    actionListener="#{registrationModeBean.initLesson(registrationModeBean.lastPractice, propertiesBean.isLastLessonNotesLoadingEnabled)}"
-                    update=":lessonForm"
-                    value="#{msg['practical']}" rendered="#{registrationModeBean.lastPractice != null}"/>
+                        actionListener="#{registrationModeBean.initLesson(registrationModeBean.lastPractice, propertiesBean.isLastLessonNotesLoadingEnabled)}"
+                        update=":lessonForm"
+                        value="#{msg['practical']}" rendered="#{registrationModeBean.lastPractice != null}"/>
                 <ui:repeat var="note"
                            value="#{registrationModeBean.lastPractice.notes}">
                     <h:panelGrid columns="3" columnClasses="w300px, w20px">
@@ -780,11 +780,11 @@
                                 <p:outputLabel value="#{lesson.date}"
                                                styleClass="font-size-12pt #{lesson.id eq registrationModeBean.selectedLesson.id ? 'dark-red' : ''}"/>
                                 <p:outputLabel
-                                    styleClass="block uppercase font-size-10pt #{lesson.type eq 'PRACTICAL' ? 'blue' : ''}
+                                        styleClass="block uppercase font-size-10pt #{lesson.type eq 'PRACTICAL' ? 'blue' : ''}
                                      #{lesson.id eq registrationModeBean.selectedLesson.id ? 'dark-red' : ''}"
-                                    value="#{msg['label.'.concat(lesson.type.key)]}"/>
+                                        value="#{msg['label.'.concat(lesson.type.key)]}"/>
                                 <p:outputLabel
-                                    styleClass="inline-block v-align-top #{lesson.id eq registrationModeBean.selectedLesson.id ? 'dark-red' : ''}">
+                                        styleClass="inline-block v-align-top #{lesson.id eq registrationModeBean.selectedLesson.id ? 'dark-red' : ''}">
                                     <h:outputText styleClass="font-size-9pt block"
                                                   value="#{utility.getLessonCount(lesson.lesson)}"/>
                                 </p:outputLabel>
@@ -806,10 +806,10 @@
                         </f:facet>
 
                         <p:cellEditor
-                            rendered="#{registrationModeBean.selectedStudent.student.studentLessons[lesson.id] ne null}">
+                                rendered="#{registrationModeBean.selectedStudent.student.studentLessons[lesson.id] ne null}">
                             <f:facet name="output">
                                 <h:outputText
-                                    value="#{registrationModeBean.selectedStudent.student.studentLessons[lesson.id].mark}"/>
+                                        value="#{registrationModeBean.selectedStudent.student.studentLessons[lesson.id].mark}"/>
                                 <p:outputLabel id="noteStudentLesson" styleClass="float-right"
                                                rendered="#{registrationModeBean.selectedStudent.student.studentLessons[lesson.id].notes.size() gt 0}">
                                     <i class="fa fa-info-circle"/>

@@ -101,6 +101,11 @@
                                 itemLabel="#{msg['studentMode.show.chip']}">
                                 <f:ajax event="change" render=":studentModeForm:chip"/>
                             </p:selectBooleanCheckbox>
+                            <p:selectBooleanCheckbox
+                                value="#{studentModeBean.hideRecordBook}"
+                                itemLabel="#{msg['studentMode.show.recordBook']}">
+                                <f:ajax event="change" render=":studentModeForm:recordBook"/>
+                            </p:selectBooleanCheckbox>
                         </p:overlayPanel>
 
 
@@ -110,8 +115,7 @@
                                      value="#{studentModeBean.stream}"
                                      styleClass="block"
                                      rendered="#{studentModeBean.studentStreams.size() gt 1}"
-                                     style="min-width: 0; width: 100px;"
-                    >
+                                     style="min-width: 0; width: 100px;">
                         <f:selectItem itemValue="#{null}" itemLabel="#{msg['select.stream']}"/>
                         <f:selectItems value="#{studentModeBean.studentStreams}" var="stream"
                                        itemLabel="#{stream.name}"
@@ -217,12 +221,17 @@
                             value="#{studentModeBean.stream.labCount ne null ? studentModeBean.stream.labCount : ''}"/>
                     </h:outputFormat>
                     <p:outputLabel value="#{msg['studentMode.stream.course']} #{studentModeBean.stream.course}"/>
-                    <p:outputPanel style="text-align:center;font-weight: bold;">
-                        <h:outputText value="#{msg['menu.student.chip']}: "
-                                      rendered="#{studentModeBean.hideChip}"/>
-                        <h:outputText value="#{studentModeBean.lessonStudent.student.cardUid}"
-                                      rendered="#{studentModeBean.hideChip}"/>
-                    </p:outputPanel>
+                    <h:outputLabel id="recordBook">
+                        <h:outputText value="#{msg['studentMode.recordBook']}: " rendered="#{studentModeBean.hideRecordBook}"/>
+                        <h:outputText value="#{studentModeBean.lessonStudent.student.recordBook}"
+                                      rendered="#{studentModeBean.hideRecordBook and studentModeBean.lessonStudent.student.recordBook ne null}"/>
+                        <h:outputText value="#{msg['studentMode.recordBook.absent']}" styleClass="lowercase"
+                                      rendered="#{studentModeBean.hideRecordBook and studentModeBean.lessonStudent.student.recordBook eq null }"/>
+
+                        <h:outputText
+                            value="#{msg['studentMode.chip']}: #{studentModeBean.lessonStudent.student.cardUid}"
+                            style="margin-left: 30px" rendered="#{studentModeBean.hideChip}"/>
+                    </h:outputLabel>
                 </h:panelGroup>
             </h:panelGroup>
         </h:panelGrid>

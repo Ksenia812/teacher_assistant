@@ -65,7 +65,8 @@ public class StudentModeBean implements Serializable, SerialListenerBean {
     private List<Student> students;
     private String studentsType = "ALL";
     private boolean hidePatronymic;
-    private boolean hideChip;
+    private boolean hideChip = true;
+    private boolean hideRecordBook = true;
 
     public void setHidePatronymic(boolean hidePatronymic) {
         this.hidePatronymic = hidePatronymic;
@@ -73,6 +74,10 @@ public class StudentModeBean implements Serializable, SerialListenerBean {
 
     public void setHideChip(boolean hideChip) {
         this.hideChip = hideChip;
+    }
+
+    public void setHideRecordBook(boolean hideRecordBook) {
+        this.hideRecordBook = hideRecordBook;
     }
 
     public void initStudentMode(Student student, Stream stream) {
