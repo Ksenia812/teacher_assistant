@@ -37,10 +37,14 @@ public class NotificationSettingsBean implements Serializable {
     public Map<String, NotificationSetting> getSettings() {
         if (settings == null) {
             settings = new HashMap<>();
-            for (NotificationSetting s : EntityDAO.getAll(NotificationSetting.class)) {
-                settings.put(s.getType().name(), s);
-                System.out.println(s);
-                System.out.println(settings.get(s.getType().name()));
+            try {
+                for (NotificationSetting s : EntityDAO.getAll(NotificationSetting.class)) {
+                    settings.put(s.getType().name(), s);
+                    System.out.println(s);
+                    System.out.println(settings.get(s.getType().name()));
+                }
+            } catch (NullPointerException e){
+                LOGGER.warn(e.getMessage());
             }
         }
         return settings;
