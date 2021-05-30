@@ -9,16 +9,6 @@
 
         <p:menubar id="menu" autoDisplay="#{false}" styleClass="alignMenuItems" rendered="#{menuBean.showMenu}">
             <p:submenu label="#{msg['menu.file']}" icon="fa fa-fw fa-file">
-                <p:menuitem value="#{msg['menu.alarm']}"
-                            icon="fa fa-fw fa-clock-o"
-                            actionListener="#{alarmBean.initAlarm}"
-                            update=":alarmsForm"
-                            disabled="#{not sessionBean.connected}"/>
-                <p:menuitem value="#{msg['notification']}"
-                            icon="fa fa-fw fa-exclamation-triangle"
-                            actionListener="#{notificationSettingsBean.init}"
-                            update=":notificationSettingForm"
-                            disabled="#{not sessionBean.connected}"/>
                 <p:menuitem value="#{msg['menu.settings']}"
                             icon="fa fa-fw fa-wrench"
                             actionListener="#{settingsBean.init}"

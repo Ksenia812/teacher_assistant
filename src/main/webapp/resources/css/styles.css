@@ -783,6 +783,12 @@ body {
 .settings-form .ui-widget-content {
     width: 800px;
 }
+.settings-form .ui-inputnumber input{
+    width: 25px;
+}
+.settings-form .ui-slider{
+    width: 100px;
+}
 
 /* file upload*/
 .ui-fileupload .ui-fileupload-buttonbar {
@@ -896,4 +902,11 @@ body {
 
 ::-webkit-scrollbar {
     width: 0 !important;
+}
+/*width*/
+.full-width{
+    width: 100%;
+}
+.forty-width{
+    width: 100px;
 }
