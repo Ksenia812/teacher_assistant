@@ -1,4 +1,5 @@
 .idea/
 *.iml
+pom.xml
 src/main/java/com/grsu/teacherassistant/utils/FileUtils.java
 target/
