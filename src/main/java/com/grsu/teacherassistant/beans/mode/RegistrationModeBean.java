@@ -4,6 +4,7 @@ import com.grsu.teacherassistant.beans.AlarmBean;
 import com.grsu.teacherassistant.beans.NotificationSettingsBean;
 import com.grsu.teacherassistant.beans.utility.*;
 import com.grsu.teacherassistant.constants.Constants;
+import com.grsu.teacherassistant.dao.DisciplineDAO;
 import com.grsu.teacherassistant.dao.EntityDAO;
 import com.grsu.teacherassistant.dao.LessonDAO;
 import com.grsu.teacherassistant.dao.StudentDAO;
@@ -122,9 +123,11 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
     private Lesson lastLecture;
     private Lesson lastPractice;
 
+    private Integer disciplineId;
+
     //gets list of students skips dates and lessons and formats for ui
     public List<String> getStudentTotalSkips() {
-        List<StudentSkip> processedStudentSkips = StudentDAO.getStudentSkipsDates(processedStudent.getId(), selectedLesson.getId());
+        List<StudentSkip> processedStudentSkips = StudentDAO.getStudentSkipsDates(processedStudent.getId(), selectedLesson.getId(), disciplineId);
         List<String> skips = new ArrayList<>();
         SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
 
@@ -139,8 +142,8 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
     }
 
     public List<String> getStudentTotalSkipsWithAdditionalLessons() {
-        List<StudentSkip> processedStudentSkips = StudentDAO.getStudentSkipsDates(processedStudent.getId(), selectedLesson.getId());
-        List<AdditionalLesson> processedStudentAdditionalLessons = StudentDAO.getStudentAdditionalLessonsInfo(processedStudent.getId());
+        List<StudentSkip> processedStudentSkips = StudentDAO.getStudentSkipsDates(processedStudent.getId(), selectedLesson.getId(), disciplineId);
+        List<AdditionalLesson> processedStudentAdditionalLessons = StudentDAO.getStudentAdditionalLessonsInfo(processedStudent.getId(), disciplineId);
 
         long additionalLectures = processedStudentAdditionalLessons.stream()
             .filter(s -> s.getLessonType().equals(LessonType.LECTURE))
@@ -189,7 +192,7 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
     }
 
     public List<String> getStudentSkipsDatesByLessonType(int lessonTypeCode) {
-        List<Date> processedStudentSkipsDates = StudentDAO.getStudentSkipsByLessonType(processedStudent.getId(), lessonTypeCode, selectedLesson.getId());
+        List<Date> processedStudentSkipsDates = StudentDAO.getStudentSkipsByLessonType(processedStudent.getId(), lessonTypeCode, selectedLesson.getId(), disciplineId);
 
         if (processedStudentSkipsDates.size() > 0) {
             List<String> skips = new ArrayList<>();
@@ -229,6 +232,7 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
         if (lesson != null) {
             clear();
             this.selectedLesson = EntityDAO.get(Lesson.class, lesson.getId());
+            this.disciplineId = DisciplineDAO.getDisciplineByLessonId(this.selectedLesson.getId());
             calculateTimer();
             initStudents();
             initAllStudents();
@@ -784,13 +788,13 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
     }
 
     public String getAdditionLessonInfo(Student student) {
-        int studentAdditionalLessonsAmount = StudentDAO.getStudentAdditionalLessonsAmount(student.getId());
+        int studentAdditionalLessonsAmount = StudentDAO.getStudentAdditionalLessonsAmount(student.getId(), disciplineId);
         String additionalLessonCountInfo = studentAdditionalLessonsAmount == 0 ? "" : String.format(" +%d", studentAdditionalLessonsAmount);
         return additionalLessonCountInfo;
     }
 
     public List<String> getStudentAdditionalLessons(Student student) {
-        List<AdditionalLesson> studentAdditionalLessons = StudentDAO.getStudentAdditionalLessonsInfo(student.getId());
+        List<AdditionalLesson> studentAdditionalLessons = StudentDAO.getStudentAdditionalLessonsInfo(student.getId(), disciplineId);
         List<String> studentAdditionalLessonsInfo = new ArrayList<>();
 
         SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
@@ -1005,8 +1009,8 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
             NotificationSetting absenceNotificationSettings = notificationSettingsBean.getSettings().get(NotificationType.ABSENCE.name());
             if (absenceNotificationSettings != null && absenceNotificationSettings.getActive()) {
                 if (skipInfo.containsKey(student.getId())) {
-                    Integer totalSkip = skipInfo.get(student.getId()).get(Constants.TOTAL_SKIP);
-                    if (totalSkip != null && totalSkip >= absenceNotificationSettings.getData()) {
+                    Integer totalSkip = skipInfo.get(student.getId()).get(Constants.TOTAL_SKIP) - StudentDAO.getStudentAdditionalLessonsAmount(student.getId(), disciplineId);
+                    if (totalSkip >= absenceNotificationSettings.getData()) {
                         notificationSettingsBean.play(absenceNotificationSettings);
                         return;
                     }

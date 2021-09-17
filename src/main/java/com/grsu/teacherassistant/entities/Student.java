@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
 import static com.grsu.teacherassistant.constants.Constants.GROUPS_DELIMITER;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
+
+
 /**
  * @author Pavel Zaychick
  */
@@ -78,7 +80,9 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
             "join LESSON l on l.id = sl.lesson_id and l.type_id in (1, 2, 3)\n" +
             "join SCHEDULE sch on sch.id = l.schedule_id " +
             "join STREAM str on str.id = l.stream_id\n" +
+            "join DISCIPLINE d on str.discipline_id = d.id\n" +
             "where st.id in (:studentId) and (sl.registered is null or sl.registered = 0) " +
+            "and d.id = :disciplineId\n" +
             "and ((date(l.date) < date('now', 'localtime')) or (date(l.date) = date('now', 'localtime') and time(sch.begin) <= time('now', 'localtime')) or l.id = :lessonId)\n"),
     @NamedNativeQuery(
         name = "StudentSkipsByLessonTypeQuery",
@@ -88,7 +92,9 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
             "join LESSON l on l.id = sl.lesson_id and l.type_id = :lessonTypeId\n" +
             "join SCHEDULE sch on sch.id = l.schedule_id " +
             "join STREAM str on str.id = l.stream_id\n" +
+            "join DISCIPLINE d on str.discipline_id = d.id\n" +
             "where st.id in (:studentId) and (sl.registered is null or sl.registered = 0) " +
+            "and d.id = :disciplineId\n" +
             "and ((date(l.date) < date('now', 'localtime')) or (date(l.date) = date('now', 'localtime') and time(sch.begin) <= time('now', 'localtime')) or l.id = :lessonId)\n"),
     @NamedNativeQuery(
         name = "AdditionalStudents",
@@ -115,7 +121,10 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
             "join STUDENT s on sl.student_id = s.id\n" +
             "join STUDENT_GROUP sg on s.id = sg.student_id\n" +
             "join LESSON l on sl.lesson_id = l.id\n" +
+            "join STREAM str on l.stream_id = str.id\n" +
+            "join DISCIPLINE d on str.discipline_id = d.id\n" +
             "where sl.student_id = :studentId\n" +
+            "and d.id = :disciplineId\n" +
             "and sl.registered = 1\n" +
             "and l.group_id <> sg.group_id"),
     @NamedNativeQuery(
@@ -127,7 +136,10 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
             "join LESSON l on sl.lesson_id = l.id\n" +
             "join 'GROUP' g on l.group_id = g.id\n" +
             "join LESSON_TYPE lt on l.type_id = lt.id\n" +
+            "join STREAM str on l.stream_id = str.id\n" +
+            "join DISCIPLINE d on str.discipline_id = d.id\n" +
             "where sl.student_id =:studentId\n" +
+            "and d.id = :disciplineId\n" +
             "and sl.registered = 1\n" +
             "and l.group_id <> sg.group_id"
     )

@@ -119,11 +119,12 @@ public class StudentDAO {
     }
 
     //gets student's skips dates and lessons
-    public static List<StudentSkip> getStudentSkipsDates(Integer studentId, int lessonId){
+    public static List<StudentSkip> getStudentSkipsDates(Integer studentId, int lessonId, int disciplineId){
         Session session = DBSessionFactory.getSession();
         Query<Object[]> query = session.createNamedQuery("StudentSkipsQuery");
         query.setParameter("studentId", studentId);
         query.setParameter("lessonId", lessonId);
+        query.setParameter("disciplineId", disciplineId);
 
         List<StudentSkip> studentSkips = new ArrayList<>();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -140,12 +141,13 @@ public class StudentDAO {
         return studentSkips;
     }
 
-    public static List<Date> getStudentSkipsByLessonType(Integer studentId, int lessonTypeCode, int lessonId){
+    public static List<Date> getStudentSkipsByLessonType(Integer studentId, int lessonTypeCode, int lessonId, int disciplineId){
         Session session = DBSessionFactory.getSession();
         Query queryDates = session.createNamedQuery("StudentSkipsByLessonTypeQuery");
         queryDates.setParameter("studentId", studentId);
         queryDates.setParameter("lessonTypeId", lessonTypeCode);
         queryDates.setParameter("lessonId", lessonId);
+        queryDates.setParameter("disciplineId", disciplineId);
 
         List<Date> dates = new ArrayList<>();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -175,12 +177,13 @@ public class StudentDAO {
         return null;
     }
 
-    public static int getStudentAdditionalLessonsAmount(int studentId){
+    public static int getStudentAdditionalLessonsAmount(int studentId, int disciplineId){
         int studentAdditionalLessonsAmount = 0;
         Session session = DBSessionFactory.getSession();
         try {
             Query query = session.createNamedQuery("StudentAdditionalLessons");
             query.setParameter("studentId", studentId);
+            query.setParameter("disciplineId", disciplineId);
             studentAdditionalLessonsAmount = (int) query.getSingleResult();
         } catch (PersistenceException e) {
             LOGGER.error(e.getLocalizedMessage());
@@ -193,13 +196,14 @@ public class StudentDAO {
         return studentAdditionalLessonsAmount;
     }
 
-    public static List<AdditionalLesson> getStudentAdditionalLessonsInfo(int studentId){
+    public static List<AdditionalLesson> getStudentAdditionalLessonsInfo(int studentId, int disciplineId){
         List<AdditionalLesson> additionalLessons = new ArrayList<>();
         Session session = DBSessionFactory.getSession();
         try {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             Query<Object[]> query = session.createNamedQuery("StudentAdditionalLessonsInfo");
             query.setParameter("studentId", studentId);
+            query.setParameter("disciplineId", disciplineId);
             for (Object[] object : query.getResultList()) {
                 Date date = formatter.parse((String)object[1]);
                 LessonType lessonType = LessonType.getLessonTypeByCode(((Integer)object[0]));
