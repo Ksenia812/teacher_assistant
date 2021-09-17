@@ -20,8 +20,8 @@ public class FileUtils {
     public static final String CONFIG_FILE_PATH = buildPath(APP_FILES_PATH, "config", "config.properties");
     public static final String CSV_FOLDER_PATH = buildPath(APP_FILES_PATH, "csv");
     public static final String CSV_EXTENSION = ".csv";
-    public static final String DATABASE_PATH = buildPath(APP_FILES_PATH, "database", getProperty("db.name"));
     public static final String STUDENTS_PHOTO_FOLDER_PATH = buildPath(WEBAPPS_FILES_PATH, "photo", "students");
+    public static final String DATABASE_PATH = buildPath(APP_FILES_PATH, "database", getProperty("db.name"));//classLoader.getResource("/database/db.s3db").getPath();
     public static final String DEFAULT_BACKUP_PATH = "backups/";
     /**
      * Builds system-dependent path with specific separators
