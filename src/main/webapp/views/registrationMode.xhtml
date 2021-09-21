@@ -333,7 +333,7 @@
                          lazy="true"
                          emptyMessage="#{msg['label.emptyMessage']}"
                          scrollable="true"
-                         scrollHeight="300"
+                         scrollHeight="380"
                          frozenRows="0">
 
 
@@ -400,18 +400,18 @@
                          value="#{registrationModeBean.absentStudentsLazyModel}"
                          sortBy="#{aStudent.totalSkip}"
                          sortOrder="descending"
-                         resizableColumns="true"
                          selection="#{registrationModeBean.selectedAbsentStudents}"
+                         resizableColumns="true"
                          rowKey="#{aStudent.id}"
-                         paginator="true"
                          rows="15"
+                         paginator="true"
                          paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
                          rowsPerPageTemplate="10,11,12,13,14,15,16,17,18,19,20"
                          paginatorPosition="bottom"
                          lazy="true"
                          emptyMessage="#{msg['label.emptyMessage']}"
                          scrollable="true"
-                         scrollHeight="300"
+                         scrollHeight="380"
                          frozenRows="0">
                 <p:ajax event="rowSelectCheckbox" update="addAbsentStudentsBtn"/>
                 <p:ajax event="rowUnselectCheckbox" update="addAbsentStudentsBtn"/>
