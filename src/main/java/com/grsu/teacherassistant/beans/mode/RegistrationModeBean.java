@@ -402,13 +402,12 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
         }
     }
 
-    public List<Student> getPraepostors(){
+    public List<Student> getPraepostors() {
         List<Student> praepostors = new ArrayList<>();
         if (selectedLesson.getType().equals(LessonType.LECTURE)) {
             praepostors = selectedLesson.getStream().getGroups().stream()
                 .map(Group::getPraepostor).collect(Collectors.toList());
-        }
-        else {
+        } else {
             praepostors.add(selectedLesson.getGroup().getPraepostor());
         }
         return praepostors;
@@ -757,7 +756,7 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
         if (studentAdditionalLessons > totalStudentSkipsAmount) {
             return "0";
         }
-            return String.valueOf(getTotalStudentSkipsAmount(student) - getStudentAdditionalLessons(student).size());
+        return String.valueOf(getTotalStudentSkipsAmount(student) - getStudentAdditionalLessons(student).size());
     }
 
     public int getStudentSkipsByLessonType(Student student, int lessonTypeCode) {
@@ -788,13 +787,18 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
     }
 
     public String getAdditionLessonInfo(Student student) {
-        int studentAdditionalLessonsAmount = StudentDAO.getStudentAdditionalLessonsAmount(student.getId(), disciplineId);
+        int studentAdditionalLessonsAmount = StudentDAO
+            .getStudentAdditionalLessonsInfo(student.getId(), disciplineId)
+            .size();
+
         String additionalLessonCountInfo = studentAdditionalLessonsAmount == 0 ? "" : String.format(" +%d", studentAdditionalLessonsAmount);
         return additionalLessonCountInfo;
     }
 
     public List<String> getStudentAdditionalLessons(Student student) {
-        List<AdditionalLesson> studentAdditionalLessons = StudentDAO.getStudentAdditionalLessonsInfo(student.getId(), disciplineId);
+        List<AdditionalLesson> studentAdditionalLessons = StudentDAO
+            .getStudentAdditionalLessonsInfo(student.getId(), disciplineId);
+
         List<String> studentAdditionalLessonsInfo = new ArrayList<>();
 
         SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
@@ -803,7 +807,7 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
                 formatter.format(l.getDate()), convertLessonType(l.getLessonType()), l.getGroupName()));
         }
 
-            return studentAdditionalLessonsInfo;
+        return studentAdditionalLessonsInfo;
     }
 
     public void onStudentRowSelect(SelectEvent event) {

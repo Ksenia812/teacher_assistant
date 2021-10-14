@@ -129,7 +129,7 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
             "and l.group_id <> sg.group_id"),
     @NamedNativeQuery(
         name = "StudentAdditionalLessonsInfo",
-        query = "select lt.id as lessonType, l.DATE as lessonDate, g.name as groupName\n" +
+        query = "select distinct lt.id as lessonType, l.DATE as lessonDate, g.name as groupName\n" +
             "from STUDENT_LESSON sl\n" +
             "join STUDENT s on sl.student_id = s.id\n" +
             "join STUDENT_GROUP sg on s.id = sg.student_id\n" +

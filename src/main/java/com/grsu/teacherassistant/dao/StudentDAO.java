@@ -1,6 +1,7 @@
 package com.grsu.teacherassistant.dao;
 
 import com.grsu.teacherassistant.constants.Constants;
+import com.grsu.teacherassistant.entities.Group;
 import com.grsu.teacherassistant.entities.Student;
 import com.grsu.teacherassistant.models.AdditionalLesson;
 import com.grsu.teacherassistant.models.LessonType;
@@ -16,6 +17,7 @@ import javax.persistence.PersistenceException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class StudentDAO {
     private static final Logger LOGGER = LoggerFactory.getLogger(StudentDAO.class);
@@ -217,6 +219,13 @@ public class StudentDAO {
             session.close();
         }
 
-        return additionalLessons;
+        return additionalLessons .stream()
+            .filter(lesson -> {
+                Optional<Group> group = EntityDAO.get(Student.class, studentId).getGroups().stream()
+                    .filter(g -> g.getName().equals(lesson.getGroupName()))
+                    .findFirst();
+                return !group.isPresent();
+            })
+            .collect(Collectors.toList());
     }
 }
