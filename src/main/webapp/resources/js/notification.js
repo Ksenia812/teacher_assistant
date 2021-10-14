@@ -3,10 +3,10 @@ Notification.requestPermission().then(function (result) {
 });
 
 function spawnNotification(notification) {
-	var options = {
-		body: notification.body,
+	let options = {
+		body: notification.title.toUpperCase().concat("\n", notification.body.toUpperCase()),
 		icon: notification.image
 	};
-	var n = new Notification(notification.title, options);
+	let n = new Notification("", options);
 	setTimeout(n.close.bind(n), notification.timeout);
 }
