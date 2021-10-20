@@ -885,13 +885,20 @@ public class RegistrationModeBean implements Serializable, SerialListenerBean {
         notification.setTimeout(3000);
 
         if (!studentNotExist) {
-            String skipsStr = String.format("%s (%s:%s/%s) +%s",
-                getTotalSkipsAdditionalLessons(processedStudent), getTotalStudentSkips(processedStudent),
-                getStudentSkipsByLessonType(processedStudent, LessonType.LECTURE.getCode()), getStudentSkipsByLessonType(processedStudent, LessonType.PRACTICAL.getCode()),
-                getAdditionLessonInfo(processedStudent));
+            String skipsStr = String.format("%s:", localeUtils.getMessage("label.skips"));
+
+            if (getTotalStudentSkipsAmount(processedStudent) > 0) {
+                skipsStr = String.format("%s %s (%s:%s/%s) +%s",
+                    skipsStr,
+                    getTotalSkipsAdditionalLessons(processedStudent), getTotalStudentSkips(processedStudent),
+                    getStudentSkipsByLessonType(processedStudent, LessonType.LECTURE.getCode()), getStudentSkipsByLessonType(processedStudent, LessonType.PRACTICAL.getCode()),
+                    getAdditionLessonInfo(processedStudent));
+            } else {
+                skipsStr = String.format("%s 0", skipsStr);
+            }
 
             notification.setBody(skipsStr);
-            notification.setTitle(processedStudent.getLastName() + "\n" + processedStudent.getFirstName());
+            notification.setTitle(processedStudent.getLastName() + "\n" + processedStudent.getFirstName() + "\n");
         } else {
             notification.setBody(localeUtils.getMessage("label.studentNotExist"));
             notification.setTitle(processedStudent.getCardUid());
