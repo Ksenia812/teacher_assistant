@@ -27,6 +27,7 @@ public class LessonStudentModel implements Serializable {
     private String name;
 
     private Integer totalSkip;
+    private Integer totalSkipsWithAdditionalLessons;
     private Integer lectureSkip;
     private Integer practicalSkip;
     private Integer labSkip;
@@ -172,6 +173,9 @@ public class LessonStudentModel implements Serializable {
             }
             skipLessons.sort(Comparator.comparing(Lesson::getDate));
         }
+
+        totalSkipsWithAdditionalLessons = totalSkip - additionalLessons.size();
+        totalSkipsWithAdditionalLessons = totalSkipsWithAdditionalLessons < 0 ? 0 : totalSkipsWithAdditionalLessons;
     }
 
     public String getSkips() {

@@ -37,15 +37,33 @@
                     <p:outputLabel value="#{studentModeBean.lessonStudent.student.email}"/>
                     <h:panelGroup id="studentSkips" rendered="#{studentModeBean.stream ne null}"
                                   styleClass="dark-red bold">
-                        <h:outputText
-                            value="#{msg['label.skips']}: #{studentModeBean.lessonStudent.totalSkip} (#{studentModeBean.lessonStudent.skips})"
-                            rendered="#{(studentModeBean.lessonStudent.totalSkip gt 0)}"/>
-                        <h:outputText value="#{msg['lesson.visit.noSkip']}"
+                        <h:outputText value="#{msg['label.skips']}: "/>
+                        <h:outputLink style="text-decoration: none"
+                                      rendered="#{studentModeBean.lessonStudent.totalSkip gt 0}">
+                            <h:outputText id="studentTotalSkipsAdditionalLessons" styleClass="lowercase red"
+                                          escape="false"
+                                          value="#{studentModeBean.lessonStudent.totalSkipsWithAdditionalLessons}"/>
+                            <h:outputText value=" ("/>
+                            <h:outputText id="studentTotalSkips" styleClass="lowercase blue" escape="false"
+                                          value="#{studentModeBean.lessonStudent.totalSkip}"/>
+                            <h:outputText id="studentLectureSkips" styleClass="lowercase dark-red" escape="false"
+                                          value=":#{studentModeBean.lessonStudent.lectureSkip}"/>
+                            <h:outputText value="/" styleClass="lowercase dark-red" escape="false"/>
+                            <h:outputText id="studentPracticalSkips" styleClass="lowercase dark-red" escape="false"
+                                          value="#{studentModeBean.lessonStudent.practicalSkip}"/>
+                            <h:outputLink style="text-decoration: none"
+                                          rendered="#{studentModeBean.lessonStudent.labSkip gt 0}">
+                                <h:outputText value="/" styleClass="lowercase dark-red" escape="false"/>
+                                <h:outputText id="studentLabSkips" styleClass="lowercase dark-red" escape="false"
+                                              value="#{studentModeBean.lessonStudent.labSkip}"/>
+                            </h:outputLink>
+                            <h:outputText value=")"/>
+                            <h:outputText id="studentAdditionalLessons" styleClass="lowercase red" escape="false"
+                                          value=" +#{studentModeBean.lessonStudent.additionalLessons.size()}"
+                                          rendered="#{studentModeBean.lessonStudent.additionalLessons.size() gt 0}"/>
+                        </h:outputLink>
+                        <h:outputText value="0"
                                       rendered="#{not (studentModeBean.lessonStudent.totalSkip gt 0)}"/>
-                        <h:outputFormat value="#{msg['label.additionalLessons']}" styleClass="margin-left-10px"
-                                        rendered="#{studentModeBean.lessonStudent.additionalLessons.size() gt 0}">
-                            <f:param value="#{studentModeBean.lessonStudent.additionalLessons.size()}"/>
-                        </h:outputFormat>
                     </h:panelGroup>
                 </h:panelGroup>
             </h:panelGrid>
@@ -222,7 +240,8 @@
                     </h:outputFormat>
                     <p:outputLabel value="#{msg['studentMode.stream.course']} #{studentModeBean.stream.course}"/>
                     <h:outputLabel id="recordBook">
-                        <h:outputText value="#{msg['studentMode.recordBook']}: " rendered="#{studentModeBean.hideRecordBook}"/>
+                        <h:outputText value="#{msg['studentMode.recordBook']}: "
+                                      rendered="#{studentModeBean.hideRecordBook}"/>
                         <h:outputText value="#{studentModeBean.lessonStudent.student.recordBook}"
                                       rendered="#{studentModeBean.hideRecordBook and studentModeBean.lessonStudent.student.recordBook ne null}"/>
                         <h:outputText value="#{msg['studentMode.recordBook.absent']}" styleClass="lowercase"

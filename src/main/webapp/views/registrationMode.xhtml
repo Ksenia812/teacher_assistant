@@ -331,10 +331,7 @@
                          rowsPerPageTemplate="10,11,12,13,14,15,16,17,18,19,20"
                          paginatorPosition="bottom"
                          lazy="true"
-                         emptyMessage="#{msg['label.emptyMessage']}"
-                         scrollable="true"
-                         scrollHeight="380"
-                         frozenRows="0">
+                         emptyMessage="#{msg['label.emptyMessage']}">
 
 
                 <p:ajax event="rowSelectCheckbox" update="removePresentStudentsBtn"/>
@@ -409,10 +406,7 @@
                          rowsPerPageTemplate="10,11,12,13,14,15,16,17,18,19,20"
                          paginatorPosition="bottom"
                          lazy="true"
-                         emptyMessage="#{msg['label.emptyMessage']}"
-                         scrollable="true"
-                         scrollHeight="380"
-                         frozenRows="0">
+                         emptyMessage="#{msg['label.emptyMessage']}">
                 <p:ajax event="rowSelectCheckbox" update="addAbsentStudentsBtn"/>
                 <p:ajax event="rowUnselectCheckbox" update="addAbsentStudentsBtn"/>
                 <p:ajax event="toggleSelect" update="addAbsentStudentsBtn"
